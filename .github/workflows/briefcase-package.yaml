@@ -88,7 +88,6 @@ jobs:
           continue-on-error: true
 
         - name: Upload Artifact
-          if: success()
           uses: upload-artifact@v4
           with:
             name: pii-scanner
