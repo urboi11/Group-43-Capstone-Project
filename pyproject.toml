@@ -5,8 +5,8 @@ bundle = "com.pii-scanner"
 version = "1.0"
 url = "https://example.com"
 license.file = "LICENSE"
-author = "PIIE"
-author_email = "jason.michael.welsh@outlook.com"
+author = "pii-scanner"
+author_email = ""
 
 [tool.briefcase.app.piiscanner]
 formal_name = "pii-scanner"
@@ -41,7 +41,6 @@ requires = [
     "binaryornot==0.4.4",
     "bleach==6.2.0",
     "blis==1.3.0",
-    "briefcase==0.3.25",
     "build==1.3.0",
     "catalogue==2.0.10",
     "certifi==2025.8.3",
@@ -322,6 +321,8 @@ flatpak_runtime_version = "6.9"
 flatpak_sdk = "org.kde.Sdk"
 
 [tool.briefcase.app.piiscanner.windows]
+system_installer = true
+use_full_install_path = false
 requires = [
 ]
 
