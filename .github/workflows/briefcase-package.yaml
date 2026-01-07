@@ -83,7 +83,7 @@ jobs:
 
         - name: Briefcase Package
           run: | 
-            briefcase package --no-input
+            briefcase package --no-input --adhoc-sign
             ls -la
           continue-on-error: true
 
