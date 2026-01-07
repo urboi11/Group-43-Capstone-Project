@@ -83,7 +83,7 @@ jobs:
 
         - name: Briefcase Package
           run: | 
-            briefcase package -u
+            briefcase package -u --no-input
             ls -la
         # - name: Upload Artifact
         #   if: success()
