@@ -83,12 +83,14 @@ jobs:
 
         - name: Briefcase Package
           run: | 
-            briefcase package -u --no-input
+            briefcase package --no-input
             ls -la
-        # - name: Upload Artifact
-        #   if: success()
-        #   uses: upload-artifact@v4
-        #   with:
-        #     name: pii-scanner
-        #     path: ./dist/
+          continue-on-error: true
+
+        - name: Upload Artifact
+          if: success()
+          uses: upload-artifact@v4
+          with:
+            name: pii-scanner
+            path: ./logs/briefcase.*.log
          
