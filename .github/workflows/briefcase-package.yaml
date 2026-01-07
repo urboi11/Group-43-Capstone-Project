@@ -85,7 +85,7 @@ jobs:
           run: | 
             briefcase package --no-input
             ls -la
-          continue-on-error: true
+          # continue-on-error: true
 
         - name: Upload Artifact
           uses: upload-artifact@v4
