@@ -91,5 +91,5 @@ jobs:
           uses: upload-artifact@v4
           with:
             name: pii-scanner
-            path: ./logs/
+            path: ./logs/textfile.txt
          
