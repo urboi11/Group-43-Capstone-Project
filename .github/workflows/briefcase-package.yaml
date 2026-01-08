@@ -79,11 +79,11 @@ jobs:
           run: python -m pip install -r requirements.txt
 
         - name: Create Briefcase environment
-          run: briefcase create --no-input
+          run: briefcase create --no-input 
 
         - name: Briefcase Package
           run: | 
-            briefcase package --no-input --adhoc-sign
+            briefcase package --no-input --vvv
             ls -la
           continue-on-error: true
 
