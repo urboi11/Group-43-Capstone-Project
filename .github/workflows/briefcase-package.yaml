@@ -83,7 +83,7 @@ jobs:
 
         - name: Briefcase Package
           run: | 
-            briefcase package --identity C175702068A4CA4BF15E37A0DBF4647151E8C012
+            briefcase package --identity C175702068A4CA4BF15E37A0DBF4647151E8C012 --no-notarize -vvv
             ls -la
           continue-on-error: true
 
