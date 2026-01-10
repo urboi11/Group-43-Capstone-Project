@@ -61,7 +61,31 @@ jobs:
         runs-on: macos-15-intel
 
         steps:
-        - uses: actions/checkout@v4
+        - uses: actions/checkout@v5
+
+        - name: Install the Apple certificate 
+
+          env:
+            BUILD_CERTIFICATE_BASE64: ${{ secrets.DEVELOPER_CERTIFICATE_BASE64 }}
+            P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+            KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          run: |
+            # create variables
+            CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+            KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+
+            # import certificate 
+            echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode -o $CERTIFICATE_PATH
+
+            # create temporary keychain
+            security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+            security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+            security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+
+            # import certificate to keychain
+            security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+            security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+            security list-keychain -d user -s $KEYCHAIN_PATH
 
         - name: Setup Python 3.9
           uses:  actions/setup-python@v3
@@ -79,11 +103,11 @@ jobs:
           run: python -m pip install -r requirements.txt
 
         - name: Create Briefcase environment
-          run: briefcase create 
+          run: briefcase create
 
         - name: Briefcase Package
           run: | 
-            briefcase package --identity C175702068A4CA4BF15E37A0DBF4647151E8C012 --no-notarize -vvv
+            briefcase package --identity C175702068A4CA4BF15E37A0DBF4647151E8C012 
             ls -la
           continue-on-error: true
 
