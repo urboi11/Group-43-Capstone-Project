@@ -50,11 +50,17 @@ jobs:
               with:
                 name: | 
                     pii-scanner.msi
+            
+            - name: Get next version
+              uses: reecetech/version-increment@2024.10.1
+              id: version
+              with:
+                scheme: calver
 
             - name: Release
               uses: softprops/action-gh-release@v2
               with:
-                name: PiiScanner Release
+                name: piiscanner-${{steps.version.outputs.version}}
                 tag_name: ${{github.ref_name}}
                 files: |
                   pii-scanner-1.0.msi
