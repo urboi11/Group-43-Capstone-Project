@@ -164,3 +164,5 @@ class Ui_Form(object):
         self.label_3.setText(_translate("Form", "Results"))
         self.ResultsMainMenuButton.setText(_translate("Form", "Back To Main Menu"))
         self.FindingsFolderButton.setText(_translate("Form", "Open Findings Folder"))
+
+
