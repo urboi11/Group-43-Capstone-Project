@@ -25,9 +25,6 @@ class MainWindow(QMainWindow, Ui_Form):
 
         self.fileLocation = None
 
-        self.ssnValue = 0.0
-    
-
         self.setupUi(self)
 
         self.setFixedSize(QSize(650,500))
@@ -79,6 +76,12 @@ class MainWindow(QMainWindow, Ui_Form):
             if self.settingsPanel.dobValue != 0.0:
                 self.settingsPanel.double_spin_box_dob.setValue(float(self.settingsPanel.dobValue))
 
+            if self.settingsPanel.IPAddressValue != 0.0:
+                self.settingsPanel.double_spin_box_ip_address.setValue(self.settingsPanel.IPAddressValue)
+
+            if self.settingsPanel.addressValue != 0.0:
+                self.settingsPanel.double_spin_box_address.setValue(self.settingsPanel.addressValue)
+
             if self.settingsPanel.outputLocation != "":
                 self.settingsPanel.outputLineEdit.setText(self.settingsPanel.outputLocation)
 
@@ -128,10 +131,20 @@ class MainWindow(QMainWindow, Ui_Form):
                 
                 self.stackedWidget.setCurrentIndex(3)
 
+                thresholds = {
+                    "SSN" : float(self.settingsPanel.ssnValue),
+                    "EMAIL" : float(self.settingsPanel.emailValue),
+                    "PHONE" : float(self.settingsPanel.phoneValue),
+                    "PERSON" : float(self.settingsPanel.personValue),
+                    "CREDIT_CARD": float(self.settingsPanel.cardValue),
+                    "DOB" : float(self.settingsPanel.dobValue),
+                    # "ADDRESS" : float(self.settingsPanel.add)
+                    # "IP_ADDRESS" : 
+                }
                 model = PiiModel(
                     model_dir=self.cfg.get("model_dir", "model"),
                     thresholds=self.cfg.get("thresholds", {}),
-                    batch_size=self.cfg.get("batch_size", 8),
+                    batch_size=self.settingsPanel.batchSizeValue,
                 )
         
                 self.ProgressBar.setValue(25)
