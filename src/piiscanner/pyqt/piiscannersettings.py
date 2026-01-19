@@ -192,7 +192,7 @@ class SettingsPanel(QWidget):
         self.okayButton = QtWidgets.QPushButton(self)
         self.okayButton.setGeometry(QtCore.QRect(200, 360, 90, 30))
         self.okayButton.setFont(self.font1)
-        self.okayButton.setText("Okay")
+        self.okayButton.setText("Save")
         self.okayButton.clicked.connect(self.save_settings)
 
         self.exitButton = QtWidgets.QPushButton(self)
@@ -227,54 +227,78 @@ class SettingsPanel(QWidget):
         self.mergeGapValue = 0
 
     def reset_values(self):
-        
-        self.ssnValue = 0.0
-        
-        self.double_spin_box_ssn.setValue(0.0)
 
-        self.emailValue = 0.0
+        if self.ssnValue != 0.0:
+            pass
+        else:
+            self.ssnValue = 0.0
+            self.double_spin_box_ssn.setValue(0.0)
 
-        self.double_spin_box_email.setValue(0.0)
+        if self.emailValue != 0.0:
+            pass
+        else:
+            self.emailValue = 0.0
+            self.double_spin_box_email.setValue(0.0)
 
-        self.phoneValue = 0.0
+        if self.phoneValue != 0.0:
+            pass
+        else:
+            self.phoneValue = 0.0
+            self.double_spin_box_phone.setValue(0.0)
 
-        self.double_spin_box_phone.setValue(0.0)
+        if self.personValue != 0.0:
+            pass
+        else:
+            self.personValue = 0.0
+            self.double_spin_box_person.setValue(0.0)
 
-        self.personValue = 0.0
+        if self.cardValue != 0.0:
+            pass
+        else:
+            self.cardValue = 0.0
+            self.double_spin_box_card.setValue(0.0)
 
-        self.double_spin_box_person.setValue(0.0)
+        if self.dobValue != 0.0:
+            pass
+        else:
+            self.dobValue = 0.0
+            self.double_spin_box_dob.setValue(0.0)
 
-        self.cardValue = 0.0
+        if self.IPAddressValue != 0.0:
+            pass
+        else:
+            self.IPAddressValue = 0.0
+            self.double_spin_box_ip_address.setValue(0.0)
 
-        self.double_spin_box_card.setValue(0.0)
+        if self.addressValue != 0.0:
+            pass
+        else:
+            self.addressValue = 0.0
+            self.double_spin_box_address.setValue(0.0)
 
-        self.dobValue = 0.0
+        if self.outputLocation != "":
+            pass
+        else:
+            self.outputLocation = ""
+            self.outputLineEdit.setText("")
 
-        self.double_spin_box_dob.setValue(0.0)
+        if self.loggingLocation != "":
+            pass
+        else:
+            self.loggingLocation = ""
+            self.loggingLineEdit.setText("")
 
-        self.IPAddressValue = 0.0
+        if self.batchSizeValue != 0:
+            pass
+        else:
+            self.batchSizeValue = 0
+            self.spin_box_batch_size.setValue(0)
 
-        self.double_spin_box_ip_address.setValue(0.0)
-
-        self.addressValue = 0.0
-
-        self.double_spin_box_address.setValue(0.0)
-
-        self.outputLocation = ""
-
-        self.outputLineEdit.setText("")
-
-        self.loggingLocation = ""
-
-        self.loggingLineEdit.setText("")
-
-        self.batchSizeValue = 0
-
-        self.spin_box_batch_size.setValue(0)
-
-        self.mergeGapValue = 0
-
-        self.spin_box_merge_gap.setValue(0)
+        if self.mergeGapValue != 0:
+            pass
+        else:
+            self.mergeGapValue = 0
+            self.spin_box_merge_gap.setValue(0)
 
         self.close()
 

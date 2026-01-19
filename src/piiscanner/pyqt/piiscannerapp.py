@@ -77,10 +77,10 @@ class MainWindow(QMainWindow, Ui_Form):
                 self.settingsPanel.double_spin_box_dob.setValue(float(self.settingsPanel.dobValue))
 
             if self.settingsPanel.IPAddressValue != 0.0:
-                self.settingsPanel.double_spin_box_ip_address.setValue(self.settingsPanel.IPAddressValue)
+                self.settingsPanel.double_spin_box_ip_address.setValue(float(self.settingsPanel.IPAddressValue))
 
             if self.settingsPanel.addressValue != 0.0:
-                self.settingsPanel.double_spin_box_address.setValue(self.settingsPanel.addressValue)
+                self.settingsPanel.double_spin_box_address.setValue(float(self.settingsPanel.addressValue))
 
             if self.settingsPanel.outputLocation != "":
                 self.settingsPanel.outputLineEdit.setText(self.settingsPanel.outputLocation)
