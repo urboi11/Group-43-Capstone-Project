@@ -84,8 +84,8 @@ jobs:
             run: |
               # create variables
               APPLICATION_CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+              INSTALLER_CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate2.p12
               ls -l $RUNNER_TEMP/
-          #     INSTALLER_CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate2.p12
           #     PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
           #     KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
