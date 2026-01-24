@@ -67,42 +67,77 @@ jobs:
     #               pii-scanner-1.0.msi
     #             token: ${{ secrets.CAPSTONETOKEN }}
 
-    build-macos:
+      build-macos:
         runs-on: macos-15-intel
 
         steps:
-        - uses: actions/checkout@v4
-
-        - name: Setup Python 3.11.9
-          uses:  actions/setup-python@v3
-          with:
-           python-version: '3.11.9'
+          - name: Checkout repository
+            uses: actions/checkout@v5
+          - name: Install the Apple certificates and provisioning profile
+            env:
+              DEVELOPER_APPLICATION_CERTIFICATE_BASE64: ${{secrets.DEVELOPER_APPLICATION_CERTIFICATE_BASE64}}
+              DEVELOPER_INSTALLER_CERTIFICATE_BASE64: ${{ secrets.DEVELOPER_INSTALLER_CERTIFICATE_BASE64 }}
+              P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+              PROVISIONING_PROFILE_BASE64: ${{ secrets.PROVISIONING_PROFILE_BASE64 }}
+              KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
             
-        - name: Activate virtual environment and install dependencies
-          run: | 
-           python -m venv .venv
-        
-        - name: Activate venv environment
-          run: source .venv/bin/activate
-        
-        - name: Install Dependencies
-          run: python -m pip install -r requirements.txt
+            run: |
+              # create variables
+              APPLICATION_CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+              INSTALLER_CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+              PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
+              KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
-        - name: Create Briefcase environment
-          run: briefcase build
+              # import certificate and provisioning profile from secrets
+              echo -n "$DEVELOPER_APPLICATION_CERTIFICATE_BASE64" | base64 --decode -o $APPLICATION_CERTIFICATE_PATH
+              echo -n "DEVELOPER_INSTALLER_CERTIFICATE_BASE64" | base64 --decode -o $INSTALLER_CERTIFICATE_PATH
+              echo -n "$PROVISIONING_PROFILE_BASE64" | base64 --decode -o $PP_PATH
 
-        - name: Briefcase Package App
-          run: | 
-            briefcase package macOS app --identity C81E52C69F0D51161D04C97558CE624A2C48480B
+              # create temporary keychain
+              security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+              security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+              security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
-        - name: Briefcase Package Installer
-          run: |
-            briefcase package macOS app --installer-identity 19A2C1C2EE4341C3E1F630ECAB156319CB403650
+              # import certificate to keychain
+              security import $APPLICATION_CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+              security import $INSTALLER_CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+              security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+              security list-keychain -d user -s $KEYCHAIN_PATH
 
-        - name: check directory
-          run: |
-            ls -l
-        # - name: Upload Artifact
+              # apply provisioning profile
+              mkdir -p ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
+              cp $PP_PATH ~/Library/Developer/Xcode/UserData/Provisioning\ Profiles
+
+          - name: Setup Python 3.11.9
+            uses:  actions/setup-python@v3
+            with:
+              python-version: '3.11.9'
+              
+          - name: Activate virtual environment and install dependencies
+            run: | 
+              python -m venv .venv
+          
+          - name: Activate venv environment
+            run: source .venv/bin/activate
+          
+          - name: Install Dependencies
+            run: python -m pip install -r requirements.txt
+
+          - name: Create Briefcase environment
+            run: briefcase build
+
+          - name: Briefcase Package App
+            run: | 
+              briefcase package macOS app --identity C81E52C69F0D51161D04C97558CE624A2C48480B
+
+          - name: Briefcase Package Installer
+            run: |
+              briefcase package macOS app --installer-identity 19A2C1C2EE4341C3E1F630ECAB156319CB403650
+
+          - name: check directory
+            run: |
+              ls -l
+    #     # - name: Upload Artifact
         #   uses: actions/upload-artifact@v4
         #   with:
         #     name: pii-scanner
