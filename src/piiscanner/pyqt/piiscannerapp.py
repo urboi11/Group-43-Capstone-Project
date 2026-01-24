@@ -11,10 +11,11 @@ from pathlib import Path
 from .piiscannerform import Ui_Form
 from .piiscannersettings import SettingsPanel
 from .piiscannerwarning import PopUpForWarning
+import platform, stat
 
 
 
-## TODO: Set up logging location.
+
 class MainWindow(QMainWindow, Ui_Form):
     def __init__(self):
         super().__init__()
@@ -22,8 +23,6 @@ class MainWindow(QMainWindow, Ui_Form):
         self.settingsPanel = SettingsPanel()
 
         self.popUpWindow = None
-
-        self.fileLocation = None
 
         self.setupUi(self)
 
@@ -46,15 +45,18 @@ class MainWindow(QMainWindow, Ui_Form):
 
         self.DirectoriesMainMenuButton.clicked.connect(lambda: self.switch_to_main_menu_panel(0))
 
-        # self.FileScanNowButton.clicked.connect(self.scan)
+        self.FileScanNowButton.clicked.connect(self.scan)
 
-        # self.DirectoryScanNowButton.clicked.connect(self.scan)
+        self.DirectoryScanNowButton.clicked.connect(self.scan)
 
         self.ResultsMainMenuButton.clicked.connect(self.switch_to_main_menu_panel)
         
-        self.FindingsFolderButton.clicked.connect(lambda: self.open_external_document(self.fileLocation))
+        #Not working on MacOS
+        self.FindingsFolderButton.clicked.connect(lambda: os.open(self.outputDir, os.O_RDWR))
 
         self.FileSettingsMenu.clicked.connect(self.open_settings)
+
+        self.DirectorySettingsMenu.clicked.connect(self.open_settings)
         
     def open_settings(self):
   
@@ -119,31 +121,49 @@ class MainWindow(QMainWindow, Ui_Form):
         self.FileLineEdit.setText("")
         self.DirectoryLineEdit.setText("")
         self.FileResults.setText("")
-    
-    def open_external_document(self, fileName):
-        os.open(fileName)
 
     def scan(self):
         try:
-            pattern = "^(.+[/\\\\])?([^/\\\\]+)$"
-            if re.match(pattern, self.FileLineEdit.text()) or re.match(pattern, self.DirectoryLineEdit.text()):
-                
-                
-                self.stackedWidget.setCurrentIndex(3)
 
-                thresholds = {
+            #Stores output into preassigned installation path.
+            
+            if self.settingsPanel.outputLocation == "":
+                if platform.system() == "Darwin":
+                    self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output"
+                    self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging"
+                    
+                    if Path(self.settingsPanel.outputLocation).is_dir() == False:
+                        os.makedirs(self.settingsPanel.outputLocation)
+                    if Path(self.settingsPanel.loggingLocation).is_dir() == False:
+                        os.makedirs(self.settingsPanel.loggingLocation)
+
+                    os.chmod(self.settingsPanel.loggingLocation, stat.S_IRWXU)
+                    os.chmod(self.settingsPanel.outputLocation, stat.S_IRWXU)
+                if platform.system() == "Windows":
+                    #TODO: Confirm the installation directory on windows.
+                    self.settingsPanel.outputLocation = "C:\\Program Files\\"
+            
+            exclude_globs_list = ["\\node_modules\\", "\\.git\\"]
+            thresholdsDict = {
                     "SSN" : float(self.settingsPanel.ssnValue),
                     "EMAIL" : float(self.settingsPanel.emailValue),
                     "PHONE" : float(self.settingsPanel.phoneValue),
                     "PERSON" : float(self.settingsPanel.personValue),
                     "CREDIT_CARD": float(self.settingsPanel.cardValue),
                     "DOB" : float(self.settingsPanel.dobValue),
-                    # "ADDRESS" : float(self.settingsPanel.add)
-                    # "IP_ADDRESS" : 
+                    "ADDRESS" : float(self.settingsPanel.addressValue),
+                    "IP_ADDRESS" : float(self.settingsPanel.IPAddressValue)
                 }
+            
+            pattern = "^(.+[/\\\\])?([^/\\\\]+)$"
+            if re.match(pattern, self.FileLineEdit.text()) or re.match(pattern, self.DirectoryLineEdit.text()):
+                
+                
+                self.stackedWidget.setCurrentIndex(3)
+
                 model = PiiModel(
-                    model_dir=self.cfg.get("model_dir", "model"),
-                    thresholds=self.cfg.get("thresholds", {}),
+                    model_dir= "model",
+                    thresholds=thresholdsDict,
                     batch_size=self.settingsPanel.batchSizeValue,
                 )
         
@@ -158,7 +178,7 @@ class MainWindow(QMainWindow, Ui_Form):
                 elif len(self.DirectoryLineEdit.text()) > 0:
                     if os.path.isdir(self.DirectoryLineEdit.text()):
                         for root, _, files in os.walk(self.DirectoryLineEdit.text()):
-                            if any(fnmatch.fnmatch(root, ex) for ex in self.cfg.get("exclude_globs", [])):
+                            if any(fnmatch.fnmatch(root, ex) for ex in exclude_globs_list):
                                 continue
                             for f in files:
                                 paths.append(os.path.join(root, f))
@@ -172,7 +192,7 @@ class MainWindow(QMainWindow, Ui_Form):
                         if not text:
                             continue
                         findings = model.predict(text)
-                        file_merged = merge_findings(findings, max_gap=self.cfg.get("merge_gap", 0))
+                        file_merged = merge_findings(findings, max_gap=int(self.settingsPanel.mergeGapValue))
                         fname = pathlib.Path(p).name
                         for f in file_merged:
                             merged.append({**f, "file": fname})
@@ -186,12 +206,11 @@ class MainWindow(QMainWindow, Ui_Form):
                         "findings": merged,
                     }
 
-                    with open(str(self.outputDir + os.path.sep + (pathlib.Path(p).name + ".json")), "w") as file:
+                    #TODO: the file name sould also be based on if it is either a directory or a file.
+                    self.outputDir = self.settingsPanel.outputLocation + os.path.sep + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".json"    
+                    with open(self.outputDir, "w") as file:
                         file.write(json.dumps(record, indent=2))
                         self.FileResults.setText(json.dumps(record, indent=2))
-
-                        self.fileLocation = self.outputDir + os.path.sep + (pathlib.Path(p).name + ".json")
-                            
                         file.close()
                         self.ProgressBar.setValue(100)
                         self.stackedWidget.setCurrentIndex(4)          
@@ -210,7 +229,8 @@ class MainWindow(QMainWindow, Ui_Form):
                     self.popUpWindow.show()
 
         except Exception as E:
-            logging.basicConfig(filename=self.cfg["logging"]["file"] + os.path.sep + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M')) + ".log" , filemode="a", format="%(asctime)s - %(levelname)s - %(message)s" )
+            logging.basicConfig(filename=self.settingsPanel.loggingLocation + os.path.sep + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M')) + ".log" , filemode="a", format="%(asctime)s - %(levelname)s - %(message)s" )
+
             self.logger = logging.getLogger(__name__)
         
             self.logger.error("%s", E, exc_info=True)
