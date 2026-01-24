@@ -86,8 +86,8 @@ jobs:
               APPLICATION_CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
               INSTALLER_CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate2.p12
               PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
+              KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
               env
-          #     KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           #     # import certificate and provisioning profile from secrets
           #     echo -n "$DEVELOPER_APPLICATION_CERTIFICATE_BASE64" | base64 --decode -o $APPLICATION_CERTIFICATE_PATH
