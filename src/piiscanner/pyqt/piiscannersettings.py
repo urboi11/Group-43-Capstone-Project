@@ -26,8 +26,10 @@ class SettingsPanel(QWidget):
         self.double_spin_box_ssn.setRange(0.0, 0.9)  # Min and Max values
         self.double_spin_box_ssn.setSingleStep(0.1)    # Amount to change per click
         self.double_spin_box_ssn.setDecimals(1)        # Number of decimal places shown
-        self.double_spin_box_ssn.setGeometry(QtCore.QRect(130, 95, 71, 21))
-
+        self.double_spin_box_ssn.setGeometry(QtCore.QRect(130, 95, 71, 21))  
+        self.double_spin_box_ssn.setValue(0.8)
+    
+    
         #Email Label and Spin Box
 
         self.emailLabel = QtWidgets.QLabel(self)
@@ -41,7 +43,7 @@ class SettingsPanel(QWidget):
         self.double_spin_box_email.setSingleStep(0.1)
         self.double_spin_box_email.setDecimals(1)        
         self.double_spin_box_email.setGeometry(QtCore.QRect(130, 135, 71, 21))
-
+        self.double_spin_box_email.setValue(0.6)
 
         #Phone Label and Spin Box
         
@@ -56,6 +58,8 @@ class SettingsPanel(QWidget):
         self.double_spin_box_phone.setSingleStep(0.1)  
         self.double_spin_box_phone.setDecimals(1)   
         self.double_spin_box_phone.setGeometry(QtCore.QRect(130, 175, 71, 21))
+        self.double_spin_box_phone.setValue(0.6)
+
 
         #Person Label and LineEdit
 
@@ -70,7 +74,7 @@ class SettingsPanel(QWidget):
         self.double_spin_box_person.setSingleStep(0.1)     
         self.double_spin_box_person.setDecimals(1)
         self.double_spin_box_person.setGeometry(QtCore.QRect(130, 210, 71, 21))
-
+        self.double_spin_box_person.setValue(0.7)
         #Credit Card Label and LineEdit
 
         self.cardLabel = QtWidgets.QLabel(self)
@@ -84,6 +88,7 @@ class SettingsPanel(QWidget):
         self.double_spin_box_card.setRange(0.0, 0.9)
         self.double_spin_box_card.setSingleStep(0.1)   
         self.double_spin_box_card.setDecimals(1)
+        self.double_spin_box_card.setValue(0.8)
         
         #Date Of Birth Label and LineEdit
 
@@ -98,7 +103,8 @@ class SettingsPanel(QWidget):
         self.double_spin_box_dob.setGeometry(QtCore.QRect(130, 275, 71, 21))
         self.double_spin_box_dob.setRange(0.0, 0.9)
         self.double_spin_box_dob.setSingleStep(0.1) 
-        self.double_spin_box_dob.setDecimals(1)   
+        self.double_spin_box_dob.setDecimals(1)
+        self.double_spin_box_dob.setValue(0.6)   
 
 
         #Ip Address Label and Double Spin Box.
@@ -112,6 +118,7 @@ class SettingsPanel(QWidget):
         self.double_spin_box_ip_address.setRange(0.0, 0.9)
         self.double_spin_box_ip_address.setSingleStep(0.1)
         self.double_spin_box_ip_address.setDecimals(1)   
+        self.double_spin_box_ip_address.setValue(0.6)
 
         #Address Label and Double Spin Box.
         self.addressLabel = QtWidgets.QLabel(self)
@@ -124,6 +131,7 @@ class SettingsPanel(QWidget):
         self.double_spin_box_address.setRange(0.0, 0.9)
         self.double_spin_box_address.setSingleStep(0.1)
         self.double_spin_box_address.setDecimals(1)   
+        self.double_spin_box_address.setValue(0.6)
 
         #TODO: Add Input validation for Output Location and Logging Location.
         
@@ -170,7 +178,7 @@ class SettingsPanel(QWidget):
         self.spin_box_batch_size.setGeometry(QtCore.QRect(465, 130, 71, 21))
         self.spin_box_batch_size.setRange(0, 8)
         self.spin_box_batch_size.setSingleStep(1)
-        self.spin_box_batch_size.setValue(0)
+        self.spin_box_batch_size.setValue(8)
 
 
         # #Merge Gap Label and Line Edit
@@ -184,7 +192,7 @@ class SettingsPanel(QWidget):
         self.spin_box_merge_gap.setGeometry(QtCore.QRect(465, 170, 71, 21))
         self.spin_box_merge_gap.setRange(0, 2)
         self.spin_box_merge_gap.setSingleStep(1)
-        self.spin_box_merge_gap.setValue(0)
+        self.spin_box_merge_gap.setValue(2)
         
 
         #Okay and Exit Button
@@ -232,49 +240,49 @@ class SettingsPanel(QWidget):
             pass
         else:
             self.ssnValue = 0.0
-            self.double_spin_box_ssn.setValue(0.0)
+            self.double_spin_box_ssn.setValue(0.8)
 
         if self.emailValue != 0.0:
             pass
         else:
             self.emailValue = 0.0
-            self.double_spin_box_email.setValue(0.0)
+            self.double_spin_box_email.setValue(0.6)
 
         if self.phoneValue != 0.0:
             pass
         else:
             self.phoneValue = 0.0
-            self.double_spin_box_phone.setValue(0.0)
+            self.double_spin_box_phone.setValue(0.6)
 
         if self.personValue != 0.0:
             pass
         else:
             self.personValue = 0.0
-            self.double_spin_box_person.setValue(0.0)
+            self.double_spin_box_person.setValue(0.7)
 
         if self.cardValue != 0.0:
             pass
         else:
             self.cardValue = 0.0
-            self.double_spin_box_card.setValue(0.0)
+            self.double_spin_box_card.setValue(0.8)
 
         if self.dobValue != 0.0:
             pass
         else:
             self.dobValue = 0.0
-            self.double_spin_box_dob.setValue(0.0)
+            self.double_spin_box_dob.setValue(0.6)
 
         if self.IPAddressValue != 0.0:
             pass
         else:
             self.IPAddressValue = 0.0
-            self.double_spin_box_ip_address.setValue(0.0)
+            self.double_spin_box_ip_address.setValue(0.6)
 
         if self.addressValue != 0.0:
             pass
         else:
             self.addressValue = 0.0
-            self.double_spin_box_address.setValue(0.0)
+            self.double_spin_box_address.setValue(0.6)
 
         if self.outputLocation != "":
             pass
@@ -292,13 +300,13 @@ class SettingsPanel(QWidget):
             pass
         else:
             self.batchSizeValue = 0
-            self.spin_box_batch_size.setValue(0)
+            self.spin_box_batch_size.setValue(8)
 
         if self.mergeGapValue != 0:
             pass
         else:
             self.mergeGapValue = 0
-            self.spin_box_merge_gap.setValue(0)
+            self.spin_box_merge_gap.setValue(2)
 
         self.close()
 
