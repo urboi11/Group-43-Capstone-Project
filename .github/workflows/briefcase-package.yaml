@@ -85,8 +85,8 @@ jobs:
               # create variables
               APPLICATION_CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
               INSTALLER_CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate2.p12
-              ls -l $RUNNER_TEMP/
-          #     PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
+              PP_PATH=$RUNNER_TEMP/build_pp.provisionprofile
+              ls -la $RUNNER_TEMP/
           #     KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
 
           #     # import certificate and provisioning profile from secrets
