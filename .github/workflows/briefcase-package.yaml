@@ -126,13 +126,9 @@ jobs:
           - name: Create Briefcase environment
             run: briefcase build
 
-          - name: Briefcase Package App
+          - name: Briefcase Package
             run: | 
-              briefcase package macOS app --identity C81E52C69F0D51161D04C97558CE624A2C48480B
-
-          - name: Briefcase Package Installer
-            run: |
-              briefcase package macOS app --installer-identity 19A2C1C2EE4341C3E1F630ECAB156319CB403650
+              briefcase package -p pkg --no-notarize --identity C81E52C69F0D51161D04C97558CE624A2C48480B --installer-identity 19A2C1C2EE4341C3E1F630ECAB156319CB403650
 
           - name: check directory
             run: |
