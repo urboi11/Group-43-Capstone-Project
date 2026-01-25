@@ -77,7 +77,7 @@ jobs:
           uses: actions/upload-artifact@v4
           with:
             name: pii-scanner.pkg
-            path: .\dist\pii-scanner-1.0.pkg
+            path: ./dist/pii-scanner-1.0.pkg
 
 
     create_release:
