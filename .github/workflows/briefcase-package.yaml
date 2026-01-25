@@ -107,8 +107,8 @@ jobs:
           uses: softprops/action-gh-release@v2
           with:
             name: piiscanner-${{steps.version.outputs.version}}
+            tag_name: ${{github.ref_name}}
             files: |
-              tag_name: ${{github.ref_name}}
               pii-scanner-1.0.msi
               pii-scanner-1.0.pkg
             token: ${{ secrets.CAPSTONETOKEN }}
