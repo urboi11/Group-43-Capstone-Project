@@ -95,13 +95,15 @@ jobs:
           with:
             name: | 
               pii-scanner.pkg
+        
+        - name: Checkout code
+          uses: actions/checkout@v4
             
         - name: Get next version
           uses: reecetech/version-increment@2024.10.1
           id: version
           with:
             scheme: calver
-            use_api: true
 
         - name: Release
           uses: softprops/action-gh-release@v2
