@@ -140,8 +140,14 @@ class MainWindow(QMainWindow, Ui_Form):
                     os.chmod(self.settingsPanel.loggingLocation, stat.S_IRWXU)
                     os.chmod(self.settingsPanel.outputLocation, stat.S_IRWXU)
                 if platform.system() == "Windows":
-                    #TODO: Confirm the installation directory on windows.
-                    self.settingsPanel.outputLocation = "C:\\Program Files\\"
+                    self.settingsPanel.outputLocation = "C:\\Program Files\\pii-scanner\\findings\\"
+                    self.settingsPanel.loggingLocation = "C:\\Program Files\\pii-scanner\\logs\\"
+
+                    if Path(self.settingsPanel.outputLocation).is_dir() == False:
+                        os.makedirs(self.settingsPanel.outputLocation)
+                    if Path(self.settingsPanel.loggingLocation).is_dir() == False:
+                        os.makedirs(self.settingsPanel.loggingLocation)
+
             
             exclude_globs_list = ["\\node_modules\\", "\\.git\\"]
             thresholdsDict = {
