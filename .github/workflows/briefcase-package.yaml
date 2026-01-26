@@ -84,6 +84,9 @@ jobs:
       runs-on: ubuntu-latest
       needs: [ build-windows, build-macos]
       steps:
+        - name: set env
+          run: echo "::set-env name=NOW::$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        
         - name: Download Windows Artifacts
           uses: actions/download-artifact@v5
           with:
@@ -108,7 +111,7 @@ jobs:
         - name: Release
           uses: softprops/action-gh-release@v2
           with:
-            name: piiscanner-${{steps.version.outputs.version}}
+            name: PIIE-Scanner-${{ env.NOW }}
             tag_name: ${{github.ref_name}}
             files: |
               pii-scanner-1.0.msi
