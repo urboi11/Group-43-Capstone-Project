@@ -4,16 +4,14 @@ from PySide6 import QtCore, QtGui, QtWidgets
 import json, fnmatch, pathlib, time, yaml, os, webbrowser
 from ..modelbackend.infer import PiiModel
 from ..modelbackend.utils import read_any, merge_findings
-import logging
+import logging, sys, platform, stat
 import datetime as dt
 import regex as re
 from pathlib import Path
 from .piiscannerform import Ui_Form
 from .piiscannersettings import SettingsPanel
 from .piiscannerwarning import PopUpForWarning
-import platform, stat
-
-
+from ctypes import *
 
 
 class MainWindow(QMainWindow, Ui_Form):
@@ -51,12 +49,56 @@ class MainWindow(QMainWindow, Ui_Form):
 
         self.ResultsMainMenuButton.clicked.connect(self.switch_to_main_menu_panel)
         
-        #Not working on MacOS
         self.FindingsFolderButton.clicked.connect(lambda: os.open(self.outputDir, os.O_RDWR))
 
         self.FileSettingsMenu.clicked.connect(self.open_settings)
 
         self.DirectorySettingsMenu.clicked.connect(self.open_settings)
+        
+        if self.settingsPanel.outputLocation == "":
+            if platform.system() == "Darwin":
+                self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output"
+                self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging"
+                    
+                if Path(self.settingsPanel.outputLocation).is_dir() == False:
+                    os.makedirs(self.settingsPanel.outputLocation)
+                if Path(self.settingsPanel.loggingLocation).is_dir() == False:
+                    os.makedirs(self.settingsPanel.loggingLocation)
+
+                os.chmod(self.settingsPanel.loggingLocation, stat.S_IRWXU)
+                os.chmod(self.settingsPanel.outputLocation, stat.S_IRWXU)
+
+            if platform.system() == "Windows":
+
+                self.settingsPanel.outputLocation = "C:\\Program Files\\pii-scanner\\findings\\"
+                self.settingsPanel.loggingLocation = "C:\\Program Files\\pii-scanner\\logs\\"
+
+                self.is_admin()                
+                if self.is_admin() == 1:
+
+                    if Path(self.settingsPanel.outputLocation).is_dir() == False:
+                        os.makedirs(self.settingsPanel.outputLocation)
+                    if Path(self.settingsPanel.loggingLocation).is_dir() == False:
+                        os.makedirs(self.settingsPanel.loggingLocation)
+                else:
+
+                    ShellExecuteWin = WinDLL("Shell32").ShellExecuteW
+
+                    ShellExecuteWin(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 0)
+
+                    if Path(self.settingsPanel.outputLocation).is_dir() == False:
+                        os.makedirs(self.settingsPanel.outputLocation)
+                    if Path(self.settingsPanel.loggingLocation).is_dir() == False:
+                        os.makedirs(self.settingsPanel.loggingLocation)
+                    
+
+    def is_admin(self):
+        try:
+            IsUserAnAdmin = WinDLL("Shell32").IsUserAnAdmin
+            print("Return Code: ", IsUserAnAdmin())
+            return IsUserAnAdmin()
+        except:
+            return False
         
     def open_settings(self):
   
@@ -124,29 +166,7 @@ class MainWindow(QMainWindow, Ui_Form):
 
     def scan(self):
         try:
-
-            #Stores output into preassigned installation path.
-            
-            if self.settingsPanel.outputLocation == "":
-                if platform.system() == "Darwin":
-                    self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output"
-                    self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging"
-                    
-                    if Path(self.settingsPanel.outputLocation).is_dir() == False:
-                        os.makedirs(self.settingsPanel.outputLocation)
-                    if Path(self.settingsPanel.loggingLocation).is_dir() == False:
-                        os.makedirs(self.settingsPanel.loggingLocation)
-
-                    os.chmod(self.settingsPanel.loggingLocation, stat.S_IRWXU)
-                    os.chmod(self.settingsPanel.outputLocation, stat.S_IRWXU)
-                if platform.system() == "Windows":
-                    self.settingsPanel.outputLocation = "C:\\Program Files\\pii-scanner\\findings\\"
-                    self.settingsPanel.loggingLocation = "C:\\Program Files\\pii-scanner\\logs\\"
-
-                    if Path(self.settingsPanel.outputLocation).is_dir() == False:
-                        os.makedirs(self.settingsPanel.outputLocation)
-                    if Path(self.settingsPanel.loggingLocation).is_dir() == False:
-                        os.makedirs(self.settingsPanel.loggingLocation)
+        
 
             
             exclude_globs_list = ["\\node_modules\\", "\\.git\\"]
