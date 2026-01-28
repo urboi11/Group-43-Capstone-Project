@@ -51,6 +51,9 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v5
 
+        - name: Checkout LFS objects
+          run: git lfs checkout
+
         - name: Setup Python 3.11.9
           uses:  actions/setup-python@v3
           with:
