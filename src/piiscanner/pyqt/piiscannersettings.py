@@ -132,8 +132,9 @@ class SettingsPanel(QWidget):
         self.double_spin_box_address.setSingleStep(0.1)
         self.double_spin_box_address.setDecimals(1)   
         self.double_spin_box_address.setValue(0.6)
+        
 
-        #TODO: Add Input validation for Output Location and Logging Location.
+        ##TODO: Add/Test for if a output and log location is blank.
         
         # Output Location Label and LineEdit
         self.outputLabel = QtWidgets.QLabel(self)
