@@ -57,16 +57,17 @@ class MainWindow(QMainWindow, Ui_Form):
         
         
         if platform.system() == "Darwin":
+            resourceFolder = "/Applications/pii-scanner.app/Contents/Resources"
+            
             self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output"
             self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging"
-                    
-            if Path(self.settingsPanel.outputLocation).is_dir() == False:
-                os.makedirs(self.settingsPanel.outputLocation)
-            if Path(self.settingsPanel.loggingLocation).is_dir() == False:
-                os.makedirs(self.settingsPanel.loggingLocation)
+            
+            if Path(self.settingsPanel.outputLocation).is_dir() == False or Path(self.settingsPanel.loggingLocation).is_dir() == False:
 
-            os.chmod(self.settingsPanel.loggingLocation, stat.S_IRWXU)
-            os.chmod(self.settingsPanel.outputLocation, stat.S_IRWXU)
+                os.system(f"osascript -e 'do shell script \"chmod o+w {resourceFolder}\" with administrator privileges'")
+        
+                os.makedirs(self.settingsPanel.outputLocation)
+                os.makedirs(self.settingsPanel.loggingLocation)
 
         if platform.system() == "Windows":
 

@@ -1,6 +1,6 @@
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtWidgets import QWidget, QDoubleSpinBox, QSpinBox, QFileDialog
-
+import platform
 
 ##TODO: Add Tool Tips to each LineEdit to signify what type of text is needed.
 class SettingsPanel(QWidget):
@@ -339,10 +339,20 @@ class SettingsPanel(QWidget):
         self.close()
 
     def open_directory_browser_output(self):
-        directory = str(QFileDialog.getExistingDirectory(self, "Select Directory")).replace("/", "\\") + "\\"
-        self.outputLineEdit.setText(directory)
+        if platform.system() == "Darwin":
+            directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+            self.outputLineEdit.setText(directory)
+
+        if platform.system() == "Windows":
+            directory = str(QFileDialog.getExistingDirectory(self, "Select Directory")).replace("/", "\\") + "\\"
+            self.outputLineEdit.setText(directory)
 
 
     def open_directory_browser_logging(self):
-        directory = str(QFileDialog.getExistingDirectory(self, "Select Directory")).replace("/", "\\") + "\\"
-        self.loggingLineEdit.setText(directory)
+        if platform.system() == "Darwin":
+            directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+            self.loggingLineEdit.setText(directory)
+
+        if platform.system() == "Windows":
+            directory = str(QFileDialog.getExistingDirectory(self, "Select Directory")).replace("/", "\\") + "\\"
+            self.loggingLineEdit.setText(directory)
