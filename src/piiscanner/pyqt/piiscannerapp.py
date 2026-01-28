@@ -4,16 +4,14 @@ from PySide6 import QtCore, QtGui, QtWidgets
 import json, fnmatch, pathlib, time, yaml, os, webbrowser
 from ..modelbackend.infer import PiiModel
 from ..modelbackend.utils import read_any, merge_findings
-import logging
+import logging, sys, platform, stat
 import datetime as dt
 import regex as re
 from pathlib import Path
 from .piiscannerform import Ui_Form
 from .piiscannersettings import SettingsPanel
 from .piiscannerwarning import PopUpForWarning
-import platform, stat
-
-
+from ctypes import *
 
 
 class MainWindow(QMainWindow, Ui_Form):
@@ -51,12 +49,56 @@ class MainWindow(QMainWindow, Ui_Form):
 
         self.ResultsMainMenuButton.clicked.connect(self.switch_to_main_menu_panel)
         
-        #Not working on MacOS
         self.FindingsFolderButton.clicked.connect(lambda: os.open(self.outputDir, os.O_RDWR))
 
         self.FileSettingsMenu.clicked.connect(self.open_settings)
 
         self.DirectorySettingsMenu.clicked.connect(self.open_settings)
+        
+        
+        if platform.system() == "Darwin":
+            resourceFolder = "/Applications/pii-scanner.app/Contents/Resources"
+            
+            self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output"
+            self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging"
+            
+            if Path(self.settingsPanel.outputLocation).is_dir() == False or Path(self.settingsPanel.loggingLocation).is_dir() == False:
+
+                os.system(f"osascript -e 'do shell script \"chmod o+w {resourceFolder}\" with administrator privileges'")
+        
+                os.makedirs(self.settingsPanel.outputLocation)
+                os.makedirs(self.settingsPanel.loggingLocation)
+
+        if platform.system() == "Windows":
+
+            self.settingsPanel.outputLocation = "C:\\Program Files\\pii-scanner\\findings\\"
+            self.settingsPanel.loggingLocation = "C:\\Program Files\\pii-scanner\\logs\\"
+
+            self.is_admin()                
+            if self.is_admin() == 1:
+
+                if Path(self.settingsPanel.outputLocation).is_dir() == False:
+                    os.makedirs(self.settingsPanel.outputLocation)
+                if Path(self.settingsPanel.loggingLocation).is_dir() == False:
+                    os.makedirs(self.settingsPanel.loggingLocation)
+            else:
+                if Path(self.settingsPanel.outputLocation).is_dir() == False or Path(self.settingsPanel.loggingLocation).is_dir() == False:
+
+                    ShellExecuteWin = WinDLL("Shell32").ShellExecuteW
+
+                    ShellExecuteWin(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 0)
+
+                    os.makedirs(self.settingsPanel.outputLocation)
+
+                    os.makedirs(self.settingsPanel.loggingLocation)
+                    
+
+    def is_admin(self):
+        try:
+            IsUserAnAdmin = WinDLL("Shell32").IsUserAnAdmin
+            return IsUserAnAdmin()
+        except:
+            return False
         
     def open_settings(self):
   
@@ -124,24 +166,20 @@ class MainWindow(QMainWindow, Ui_Form):
 
     def scan(self):
         try:
-
-            #Stores output into preassigned installation path.
-            
-            if self.settingsPanel.outputLocation == "":
-                if platform.system() == "Darwin":
-                    self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output"
-                    self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging"
+            if platform.system() == "Darwin":
+                if self.settingsPanel.outputLocation != "/Applications/pii-scanner.app/Contents/Resources/Output":
+                    self.settingsPanel.outputLocation = self.settingsPanel.outputLineEdit.text()
+                if self.settingsPanel.loggingLocation != "/Applications/pii-scanner.app/Contents/Resources/Logging":
+                    self.settingsPanel.loggingLocation = self.settingsPanel.loggingLineEdit.text()
                     
-                    if Path(self.settingsPanel.outputLocation).is_dir() == False:
-                        os.makedirs(self.settingsPanel.outputLocation)
-                    if Path(self.settingsPanel.loggingLocation).is_dir() == False:
-                        os.makedirs(self.settingsPanel.loggingLocation)
+            
+            if platform.system() == "Windows":
 
-                    os.chmod(self.settingsPanel.loggingLocation, stat.S_IRWXU)
-                    os.chmod(self.settingsPanel.outputLocation, stat.S_IRWXU)
-                if platform.system() == "Windows":
-                    #TODO: Confirm the installation directory on windows.
-                    self.settingsPanel.outputLocation = "C:\\Program Files\\"
+                if self.settingsPanel.outputLocation != "C:\\Program Files\\pii-scanner\\findings\\":
+                    self.settingsPanel.outputLocation = self.settingsPanel.outputLineEdit.text()
+                if self.settingsPanel.loggingLocation != "C:\\Program Files\\pii-scanner\\logs\\":
+                    self.settingsPanel.loggingLocation = self.settingsPanel.loggingLineEdit.text()
+            
             
             exclude_globs_list = ["\\node_modules\\", "\\.git\\"]
             thresholdsDict = {
@@ -207,7 +245,7 @@ class MainWindow(QMainWindow, Ui_Form):
                     }
 
                     #TODO: the file name sould also be based on if it is either a directory or a file.
-                    self.outputDir = self.settingsPanel.outputLocation + os.path.sep + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl"    
+                    self.outputDir = self.settingsPanel.outputLocation + os.path.sep + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl" 
                     with open(self.outputDir, "w") as file:
                         file.write(json.dumps(record, indent=2))
                         self.FileResults.setText(json.dumps(record, indent=2))

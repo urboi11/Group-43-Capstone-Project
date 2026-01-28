@@ -3,6 +3,7 @@ on:
     push:
         branches:
             - master
+            - feature/*
 jobs:
     build-windows:
       runs-on: windows-latest
@@ -49,6 +50,11 @@ jobs:
          
         - name: Checkout repository
           uses: actions/checkout@v5
+          with:
+            lfs: true
+
+        - name: Checkout LFS objects
+          run: git lfs checkout
 
         - name: Setup Python 3.11.9
           uses:  actions/setup-python@v3
@@ -66,7 +72,7 @@ jobs:
           run: python -m pip install -r requirements.txt
 
         - name: Create Briefcase environment
-          run: briefcase build
+          run: briefcase build --update-resources
 
         - name: Briefcase Package
           run: | 
@@ -99,15 +105,6 @@ jobs:
           with:
             name: | 
               pii-scanner.pkg
-        
-        - name: Checkout code
-          uses: actions/checkout@v4
-            
-        - name: Get next version
-          uses: reecetech/version-increment@2024.10.1
-          id: version
-          with:
-            scheme: calver
 
         - name: Release
           uses: softprops/action-gh-release@v2

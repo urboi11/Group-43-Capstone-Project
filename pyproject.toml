@@ -3,7 +3,7 @@
 project_name = "pii-scanner"
 bundle = "com.pii-scanner"
 version = "1.0"
-url = "https://example.com"
+url = "https://piiescanner.com"
 license.file = "LICENSE"
 author = "pii-scanner"
 author_email = ""
@@ -242,6 +242,8 @@ test_requires = [
 ]
 
 [tool.briefcase.app.piiscanner.macOS]
+icon = "resources/icon"
+installer_icon = "resources/icon"
 universal_build = true
 # As of Pyside 6.8, PySide enforces a macOS 12 minimum on wheels.
 min_os_version = "12.0"
