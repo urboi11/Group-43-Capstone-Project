@@ -339,10 +339,10 @@ class SettingsPanel(QWidget):
         self.close()
 
     def open_directory_browser_output(self):
-        directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        directory = str(QFileDialog.getExistingDirectory(self, "Select Directory")).replace("/", "\\") + "\\"
         self.outputLineEdit.setText(directory)
 
 
     def open_directory_browser_logging(self):
-        directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        directory = str(QFileDialog.getExistingDirectory(self, "Select Directory")).replace("/", "\\") + "\\"
         self.loggingLineEdit.setText(directory)

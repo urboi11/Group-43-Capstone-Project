@@ -55,47 +55,46 @@ class MainWindow(QMainWindow, Ui_Form):
 
         self.DirectorySettingsMenu.clicked.connect(self.open_settings)
         
-        if self.settingsPanel.outputLocation == "":
-            if platform.system() == "Darwin":
-                self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output"
-                self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging"
+        
+        if platform.system() == "Darwin":
+            self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output"
+            self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging"
                     
+            if Path(self.settingsPanel.outputLocation).is_dir() == False:
+                os.makedirs(self.settingsPanel.outputLocation)
+            if Path(self.settingsPanel.loggingLocation).is_dir() == False:
+                os.makedirs(self.settingsPanel.loggingLocation)
+
+            os.chmod(self.settingsPanel.loggingLocation, stat.S_IRWXU)
+            os.chmod(self.settingsPanel.outputLocation, stat.S_IRWXU)
+
+        if platform.system() == "Windows":
+
+            self.settingsPanel.outputLocation = "C:\\Program Files\\pii-scanner\\findings\\"
+            self.settingsPanel.loggingLocation = "C:\\Program Files\\pii-scanner\\logs\\"
+
+            self.is_admin()                
+            if self.is_admin() == 1:
+
                 if Path(self.settingsPanel.outputLocation).is_dir() == False:
                     os.makedirs(self.settingsPanel.outputLocation)
                 if Path(self.settingsPanel.loggingLocation).is_dir() == False:
                     os.makedirs(self.settingsPanel.loggingLocation)
-
-                os.chmod(self.settingsPanel.loggingLocation, stat.S_IRWXU)
-                os.chmod(self.settingsPanel.outputLocation, stat.S_IRWXU)
-
-            if platform.system() == "Windows":
-
-                self.settingsPanel.outputLocation = "C:\\Program Files\\pii-scanner\\findings\\"
-                self.settingsPanel.loggingLocation = "C:\\Program Files\\pii-scanner\\logs\\"
-
-                self.is_admin()                
-                if self.is_admin() == 1:
-
-                    if Path(self.settingsPanel.outputLocation).is_dir() == False:
-                        os.makedirs(self.settingsPanel.outputLocation)
-                    if Path(self.settingsPanel.loggingLocation).is_dir() == False:
-                        os.makedirs(self.settingsPanel.loggingLocation)
-                else:
+            else:
+                if Path(self.settingsPanel.outputLocation).is_dir() == False or Path(self.settingsPanel.loggingLocation).is_dir() == False:
 
                     ShellExecuteWin = WinDLL("Shell32").ShellExecuteW
 
                     ShellExecuteWin(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 0)
 
-                    if Path(self.settingsPanel.outputLocation).is_dir() == False:
-                        os.makedirs(self.settingsPanel.outputLocation)
-                    if Path(self.settingsPanel.loggingLocation).is_dir() == False:
-                        os.makedirs(self.settingsPanel.loggingLocation)
+                    os.makedirs(self.settingsPanel.outputLocation)
+
+                    os.makedirs(self.settingsPanel.loggingLocation)
                     
 
     def is_admin(self):
         try:
             IsUserAnAdmin = WinDLL("Shell32").IsUserAnAdmin
-            print("Return Code: ", IsUserAnAdmin())
             return IsUserAnAdmin()
         except:
             return False
@@ -166,8 +165,20 @@ class MainWindow(QMainWindow, Ui_Form):
 
     def scan(self):
         try:
-        
+            if platform.system() == "Darwin":
+                if self.settingsPanel.outputLocation != "/Applications/pii-scanner.app/Contents/Resources/Output":
+                    self.settingsPanel.outputLocation = self.settingsPanel.outputLineEdit.text()
+                if self.settingsPanel.loggingLocation != "/Applications/pii-scanner.app/Contents/Resources/Logging":
+                    self.settingsPanel.loggingLocation = self.settingsPanel.loggingLineEdit.text()
+                    
+            
+            if platform.system() == "Windows":
 
+                if self.settingsPanel.outputLocation != "C:\\Program Files\\pii-scanner\\findings\\":
+                    self.settingsPanel.outputLocation = self.settingsPanel.outputLineEdit.text()
+                if self.settingsPanel.loggingLocation != "C:\\Program Files\\pii-scanner\\logs\\":
+                    self.settingsPanel.loggingLocation = self.settingsPanel.loggingLineEdit.text()
+            
             
             exclude_globs_list = ["\\node_modules\\", "\\.git\\"]
             thresholdsDict = {
@@ -233,7 +244,7 @@ class MainWindow(QMainWindow, Ui_Form):
                     }
 
                     #TODO: the file name sould also be based on if it is either a directory or a file.
-                    self.outputDir = self.settingsPanel.outputLocation + os.path.sep + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl"    
+                    self.outputDir = self.settingsPanel.outputLocation + os.path.sep + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl" 
                     with open(self.outputDir, "w") as file:
                         file.write(json.dumps(record, indent=2))
                         self.FileResults.setText(json.dumps(record, indent=2))
