@@ -3,7 +3,7 @@
 project_name = "pii-scanner"
 bundle = "com.pii-scanner"
 version = "1.0"
-url = "https://example.com"
+url = "https://piiescanner.com"
 license.file = "LICENSE"
 author = "pii-scanner"
 author_email = ""
