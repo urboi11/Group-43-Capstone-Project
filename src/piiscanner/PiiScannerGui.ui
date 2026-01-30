@@ -28,7 +28,7 @@
     </font>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="WelcomeScreenPanel">
     <widget class="QRadioButton" name="ScanFilesButton">
@@ -36,9 +36,14 @@
       <rect>
        <x>130</x>
        <y>220</y>
-       <width>161</width>
-       <height>20</height>
+       <width>171</width>
+       <height>31</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Scan For Files</string>
@@ -49,9 +54,14 @@
       <rect>
        <x>360</x>
        <y>220</y>
-       <width>161</width>
-       <height>20</height>
+       <width>181</width>
+       <height>31</height>
       </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
      </property>
      <property name="text">
       <string>Scan In Directory</string>
@@ -60,14 +70,19 @@
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>120</x>
        <y>60</y>
-       <width>541</width>
-       <height>101</height>
+       <width>451</width>
+       <height>111</height>
       </rect>
      </property>
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
      <property name="text">
-      <string>Welcome! Select one of the following options below to begin your PII Scanning!</string>
+      <string>Welcome! Select one of the following options to begin!</string>
      </property>
     </widget>
    </widget>
@@ -77,8 +92,8 @@
       <rect>
        <x>120</x>
        <y>60</y>
-       <width>311</width>
-       <height>22</height>
+       <width>321</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="font">
@@ -95,8 +110,8 @@
       <rect>
        <x>450</x>
        <y>60</y>
-       <width>75</width>
-       <height>24</height>
+       <width>91</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="font">
@@ -111,7 +126,7 @@
     <widget class="QPushButton" name="DirectoryScanNowButton">
      <property name="geometry">
       <rect>
-       <x>240</x>
+       <x>260</x>
        <y>410</y>
        <width>141</width>
        <height>41</height>
@@ -144,6 +159,24 @@
       <string>Back To Main Menu</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="DirectorySettingsMenu">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>410</y>
+       <width>141</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Settings</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="FilesPanel">
     <widget class="QLineEdit" name="FileLineEdit">
@@ -151,8 +184,8 @@
       <rect>
        <x>100</x>
        <y>40</y>
-       <width>311</width>
-       <height>22</height>
+       <width>321</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="font">
@@ -169,8 +202,8 @@
       <rect>
        <x>440</x>
        <y>40</y>
-       <width>75</width>
-       <height>24</height>
+       <width>81</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="font">
@@ -187,7 +220,7 @@
       <rect>
        <x>250</x>
        <y>390</y>
-       <width>141</width>
+       <width>151</width>
        <height>41</height>
       </rect>
      </property>
@@ -218,12 +251,30 @@
       <string>Back To Main Menu</string>
      </property>
     </widget>
+    <widget class="QPushButton" name="FileSettingsMenu">
+     <property name="geometry">
+      <rect>
+       <x>490</x>
+       <y>390</y>
+       <width>141</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>Settings</string>
+     </property>
+    </widget>
    </widget>
    <widget class="QWidget" name="ScanningPanel">
     <widget class="QLabel" name="label_2">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>280</x>
        <y>70</y>
        <width>131</width>
        <height>51</height>
@@ -261,9 +312,9 @@
     <widget class="QLabel" name="label_3">
      <property name="geometry">
       <rect>
-       <x>270</x>
+       <x>300</x>
        <y>30</y>
-       <width>81</width>
+       <width>61</width>
        <height>41</height>
       </rect>
      </property>
