@@ -9,6 +9,7 @@
 
 
 from PySide6 import QtCore, QtGui, QtWidgets
+import platform
 
 
 class Ui_Form(object):
@@ -26,19 +27,28 @@ class Ui_Form(object):
         self.ScanFilesButton = QtWidgets.QRadioButton(self.WelcomeScreenPanel)
         self.ScanFilesButton.setGeometry(QtCore.QRect(130, 220, 171, 31))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        if platform.system() == "Windows":
+            font.setPointSize(15)    
+        else:
+            font.setPointSize(20)
         self.ScanFilesButton.setFont(font)
         self.ScanFilesButton.setObjectName("ScanFilesButton")
         self.ScanDirectoryButton = QtWidgets.QRadioButton(self.WelcomeScreenPanel)
         self.ScanDirectoryButton.setGeometry(QtCore.QRect(360, 220, 181, 31))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        if platform.system() == "Windows":
+            font.setPointSize(15)    
+        else:
+            font.setPointSize(20)
         self.ScanDirectoryButton.setFont(font)
         self.ScanDirectoryButton.setObjectName("ScanDirectoryButton")
         self.label_4 = QtWidgets.QLabel(self.WelcomeScreenPanel)
         self.label_4.setGeometry(QtCore.QRect(120, 60, 451, 111))
         font = QtGui.QFont()
-        font.setPointSize(20)
+        if platform.system() == "Windows":
+            font.setPointSize(13)    
+        else:
+            font.setPointSize(20)
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
         self.stackedWidget.addWidget(self.WelcomeScreenPanel)

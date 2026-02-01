@@ -7,7 +7,10 @@ class SettingsPanel(QWidget):
     def __init__(self):
         super().__init__()
         self.font1 = QtGui.QFont()
-        self.font1.setPointSize(15)
+        if platform.system() == "Windows":
+            self.font1.setPointSize(12)
+        else:
+            self.font1.setPointSize(15)
         self.setFixedSize(662, 420)
 
         self.thresholdsLabel = QtWidgets.QLabel(self)        
