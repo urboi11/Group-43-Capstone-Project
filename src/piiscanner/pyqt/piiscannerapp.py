@@ -243,11 +243,11 @@ class MainWindow(QMainWindow, Ui_Form):
                         "files": [pathlib.Path(p).name for p in paths],
                         "findings": merged,
                     }
-
                     #TODO: the file name sould also be based on if it is either a directory or a file.
                     self.outputDir = self.settingsPanel.outputLocation + os.path.sep + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl" 
                     with open(self.outputDir, "w") as file:
                         file.write(json.dumps(record))
+                        file.write("\r\n")
                         self.FileResults.setText(json.dumps(record, indent=2))
                         file.close()
                         self.ProgressBar.setValue(100)
