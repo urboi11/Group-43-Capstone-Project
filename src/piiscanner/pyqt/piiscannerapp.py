@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QWidget, QLabel, QPushButton
 from PySide6.QtCore import QSize
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtGui import QIcon
 import json, fnmatch, pathlib, time, yaml, os, webbrowser
 from ..modelbackend.infer import PiiModel
 from ..modelbackend.utils import read_any, merge_findings
@@ -24,6 +24,13 @@ class MainWindow(QMainWindow, Ui_Form):
 
         self.setupUi(self)
 
+        window_icon = QIcon()
+        print("CWD: ", os.getcwd())
+        window_icon.addFile("icon.png")
+
+        self.setWindowIcon(window_icon)
+        # self.setWindowIcon(QIcon("icon.png"))
+
         self.setFixedSize(QSize(650,500))
 
         self.ProgressBar.setMinimum(0)
@@ -33,7 +40,6 @@ class MainWindow(QMainWindow, Ui_Form):
         self.FileBrowseButton.clicked.connect(self.open_file_browser)
 
         self.DirectoriesBrowseButton.clicked.connect(self.open_directory_browser)
-
 
         self.ScanFilesButton.clicked.connect(lambda: self.switch_to_file_panel(2))
 
