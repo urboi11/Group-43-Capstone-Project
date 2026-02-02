@@ -12,6 +12,7 @@ from .piiscannerform import Ui_Form
 from .piiscannersettings import SettingsPanel
 from .piiscannerwarning import PopUpForWarning
 from ctypes import *
+import subprocess
 
 
 class MainWindow(QMainWindow, Ui_Form):
@@ -23,13 +24,6 @@ class MainWindow(QMainWindow, Ui_Form):
         self.popUpWindow = None
 
         self.setupUi(self)
-
-        window_icon = QIcon()
-        print("CWD: ", os.getcwd())
-        window_icon.addFile("icon.png")
-
-        self.setWindowIcon(window_icon)
-        # self.setWindowIcon(QIcon("icon.png"))
 
         self.setFixedSize(QSize(650,500))
 
@@ -76,6 +70,14 @@ class MainWindow(QMainWindow, Ui_Form):
                 os.makedirs(self.settingsPanel.loggingLocation)
 
         if platform.system() == "Windows":
+            
+            os.chdir("C:\\Program Files\\pii-scanner\\app\\piiscanner\\pyqt\\resources")
+
+            window_icon = QIcon()
+            
+            window_icon.addFile("icon.png")
+
+            self.setWindowIcon(window_icon)
 
             self.settingsPanel.outputLocation = "C:\\Program Files\\pii-scanner\\findings\\"
             self.settingsPanel.loggingLocation = "C:\\Program Files\\pii-scanner\\logs\\"
@@ -83,20 +85,47 @@ class MainWindow(QMainWindow, Ui_Form):
             self.is_admin()                
             if self.is_admin() == 1:
 
+
+                command = f'icacls "C:\\Program Files\\pii-scanner" /grant "Everyone":(OI)(CI)F /T'
+
+                result = subprocess.run(command, shell=True, check=True, 
+                                capture_output=True, text=True)
+
                 if Path(self.settingsPanel.outputLocation).is_dir() == False:
                     os.makedirs(self.settingsPanel.outputLocation)
                 if Path(self.settingsPanel.loggingLocation).is_dir() == False:
                     os.makedirs(self.settingsPanel.loggingLocation)
+
             else:
+                #TODO: Does it add the Everyone role to the pii-scanner folder?
                 if Path(self.settingsPanel.outputLocation).is_dir() == False or Path(self.settingsPanel.loggingLocation).is_dir() == False:
 
+                    completed = False
                     ShellExecuteWin = WinDLL("Shell32").ShellExecuteW
 
-                    ShellExecuteWin(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 0)
+                    # ShellExecuteWin(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 0)
 
-                    os.makedirs(self.settingsPanel.outputLocation)
+                    ShellExecuteWin(None, "runas", "cmd.exe", f'/k icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T', None, 1)
+                    
 
-                    os.makedirs(self.settingsPanel.loggingLocation)
+                    while completed == False:
+                        try:
+                            os.makedirs(self.settingsPanel.outputLocation)
+
+                            os.makedirs(self.settingsPanel.loggingLocation)
+                        except:
+                            pass
+                    # ShellExecuteWin(None, "runas", "cmd.exe", "/k echo Hello from ShellExecuteW!", None, 1)
+
+                    # print("IsAdmin? ", self.is_admin())
+                    
+                    # command = f'icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T'
+
+                    # result = subprocess.run(command, shell=True, check=True, 
+                    #             capture_output=True, text=True)
+
+
+
                     
 
     def is_admin(self):
@@ -244,12 +273,13 @@ class MainWindow(QMainWindow, Ui_Form):
                 self.ProgressBar.setValue(75)
 
                 if merged:
+                    ## TODO: Reorder structure. 
                     record = {
                         "ts": time.time(),
                         "files": [pathlib.Path(p).name for p in paths],
                         "findings": merged,
                     }
-                    #TODO: the file name sould also be based on if it is either a directory or a file.
+                    #TODO: the file name should also be based on if it is either a directory or a file.
                     self.outputDir = self.settingsPanel.outputLocation + os.path.sep + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl" 
                     with open(self.outputDir, "w") as file:
                         file.write(json.dumps(record))
