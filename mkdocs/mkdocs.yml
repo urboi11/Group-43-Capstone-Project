@@ -1,1 +1,5 @@
-site_name: My Docs
+site_name: PIIE
+nav:
+  - Home: index.md
+  - About: about.md
+  - PIIE: PIIE.md
