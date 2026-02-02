@@ -139,7 +139,10 @@ class Ui_Form(object):
         self.label_3 = QtWidgets.QLabel(self.ResultsScreen)
         self.label_3.setGeometry(QtCore.QRect(300, 30, 61, 41))
         font = QtGui.QFont()
-        font.setPointSize(18)
+        if platform.system() == "Windows":
+            font.setPointSize(15)
+        else:
+            font.setPointSize(18)
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
         self.FileResults = QtWidgets.QTextBrowser(self.ResultsScreen)
