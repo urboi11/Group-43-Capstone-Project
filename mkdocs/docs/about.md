@@ -1,0 +1,6 @@
+# About PIIE
+>PIIE is a personally identifiable information (PII) detection tool that combines machine learning with a graphical interface. A fine-tuned named entity recognition (NER) model built with Hugging Face Transformers and spaCy identifies sensitive data such as names, addresses, and phone numbers across text, Word, and PDF files. The Python-based backend manages file scanning and JSON logging, while a PyQt interface enables user interaction. Packaged as a standalone Windows executable using BeeWare Briefcase and deployed through GitHub, the tool was tested for accuracy, reliability, and ease of use, providing an efficient local solution for data privacy management with the ability to scale into enterprise environments through centralized log forwarding. 
+# Instructions to get started
+* To get started with PIIE, please visit [here](http://127.0.0.1:8000/PIIE/ "Title")  and Open the Github
+* Download the MSI, then run. *Maybe Remove (Please be aware microsoft doesn't recognise us and that the computer will warn you about downloading this application before allowing it. The install is safe, however it is not professionally bugtested) Maybe Remove*
+* Open PIIE, then click the 
