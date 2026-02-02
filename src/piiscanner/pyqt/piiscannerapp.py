@@ -11,8 +11,35 @@ from pathlib import Path
 from .piiscannerform import Ui_Form
 from .piiscannersettings import SettingsPanel
 from .piiscannerwarning import PopUpForWarning
-from ctypes import *
+from ctypes import wintypes, byref
+import ctypes
 import subprocess
+
+
+# Define Constants
+SEE_MASK_NOCLOSEPROCESS = 0x00000040
+INFINITE = 0xFFFFFFFF
+
+# Define the Structure for ShellExecuteEx
+class SHELLEXECUTEINFOW(ctypes.Structure):
+    _fields_ = [
+        ("cbSize", wintypes.DWORD),
+        ("fMask", wintypes.ULONG),
+        ("hwnd", wintypes.HWND),
+        ("lpVerb", wintypes.LPCWSTR),
+        ("lpFile", wintypes.LPCWSTR),
+        ("lpParameters", wintypes.LPCWSTR),
+        ("lpDirectory", wintypes.LPCWSTR),
+        ("nShow", ctypes.c_int),
+        ("hInstApp", wintypes.HINSTANCE),
+        ("lpIDList", wintypes.LPVOID),
+        ("lpClass", wintypes.LPCWSTR),
+        ("hkeyClass", wintypes.HKEY),
+        ("dwHotKey", wintypes.DWORD),
+        ("hMonitor", wintypes.HANDLE),
+        ("hProcess", wintypes.HANDLE),
+    ]
+
 
 
 class MainWindow(QMainWindow, Ui_Form):
@@ -100,21 +127,50 @@ class MainWindow(QMainWindow, Ui_Form):
                 #TODO: Does it add the Everyone role to the pii-scanner folder?
                 if Path(self.settingsPanel.outputLocation).is_dir() == False or Path(self.settingsPanel.loggingLocation).is_dir() == False:
 
-                    completed = False
-                    ShellExecuteWin = WinDLL("Shell32").ShellExecuteW
 
-                    # ShellExecuteWin(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 0)
+                    sei = SHELLEXECUTEINFOW()
+                    sei.cbSize = ctypes.sizeof(sei)
+                    sei.fMask = SEE_MASK_NOCLOSEPROCESS # This is key to getting the process handle
+                    sei.lpVerb = "runas"                # Admin elevation
+                    sei.lpFile = "cmd.exe"
+                    sei.lpParameters = f'/c icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T'
+                    sei.nShow = 1                       # SW_SHOWNORMAL
 
-                    ShellExecuteWin(None, "runas", "cmd.exe", f'/k icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T', None, 1)
+
+                    if ctypes.windll.shell32.ShellExecuteExW(byref(sei)):
+
+                        ctypes.windll.kernel32.WaitForSingleObject(sei.hProcess, INFINITE)
                     
+                        exit_code = wintypes.DWORD()
+                        ctypes.windll.kernel32.GetExitCodeProcess(sei.hProcess, byref(exit_code))
+                        
+                        print(f"Command finished with exit code: {exit_code.value}")
+                        
+                        ctypes.windll.kernel32.CloseHandle(sei.hProcess)
 
-                    while completed == False:
-                        try:
+                        if exit_code.value == 0:
                             os.makedirs(self.settingsPanel.outputLocation)
 
                             os.makedirs(self.settingsPanel.loggingLocation)
-                        except:
-                            pass
+
+                    else:
+                        print("Failed to launch process.")
+
+                    # completed = False
+                    # ShellExecuteWin = WinDLL("Shell32").ShellExecuteW
+
+                    # ShellExecuteWin(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 0)
+
+                    # returnCode = ShellExecuteWin(None, "runas", "cmd.exe", f'/c icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T', None, 1)
+
+                    # print("Code" , returnCode)
+                    # while completed == False:
+                    #     try:
+                    #         os.makedirs(self.settingsPanel.outputLocation)
+
+                    #         os.makedirs(self.settingsPanel.loggingLocation)
+                    #     except:
+                    #         pass
                     # ShellExecuteWin(None, "runas", "cmd.exe", "/k echo Hello from ShellExecuteW!", None, 1)
 
                     # print("IsAdmin? ", self.is_admin())
