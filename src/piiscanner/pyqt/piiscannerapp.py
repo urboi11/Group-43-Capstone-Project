@@ -130,7 +130,7 @@ class MainWindow(QMainWindow, Ui_Form):
                     sei.fMask = SEE_MASK_NOCLOSEPROCESS # This is key to getting the process handle
                     sei.lpVerb = "runas"                # Admin elevation
                     sei.lpFile = "cmd.exe"
-                    sei.lpParameters = f'/c icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T'
+                    sei.lpParameters = command
                     sei.nShow = 0                    # SW_SHOWNORMAL
 
 
