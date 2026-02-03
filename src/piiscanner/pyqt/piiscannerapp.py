@@ -153,32 +153,6 @@ class MainWindow(QMainWindow, Ui_Form):
                     else:
                         print("Failed to launch process.")
 
-                    # completed = False
-                    # ShellExecuteWin = WinDLL("Shell32").ShellExecuteW
-
-                    # ShellExecuteWin(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 0)
-
-                    # returnCode = ShellExecuteWin(None, "runas", "cmd.exe", f'/c icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T', None, 1)
-
-                    # print("Code" , returnCode)
-                    # while completed == False:
-                    #     try:
-                    #         os.makedirs(self.settingsPanel.outputLocation)
-
-                    #         os.makedirs(self.settingsPanel.loggingLocation)
-                    #     except:
-                    #         pass
-                    # ShellExecuteWin(None, "runas", "cmd.exe", "/k echo Hello from ShellExecuteW!", None, 1)
-
-                    # print("IsAdmin? ", self.is_admin())
-                    
-                    # command = f'icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T'
-
-                    # result = subprocess.run(command, shell=True, check=True, 
-                    #             capture_output=True, text=True)
-
-
-
                     
 
     def is_admin(self):
