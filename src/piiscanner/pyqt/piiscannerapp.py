@@ -134,7 +134,7 @@ class MainWindow(QMainWindow, Ui_Form):
                     sei.lpVerb = "runas"                # Admin elevation
                     sei.lpFile = "cmd.exe"
                     sei.lpParameters = f'/c icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T'
-                    sei.nShow = 1                       # SW_SHOWNORMAL
+                    sei.nShow = 0                    # SW_SHOWNORMAL
 
 
                     if ctypes.windll.shell32.ShellExecuteExW(byref(sei)):
