@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QWidget, QLabel, QPushButton
 from PySide6.QtCore import QSize
-from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtGui import QIcon
 import json, fnmatch, pathlib, time, yaml, os, webbrowser
 from ..modelbackend.infer import PiiModel
 from ..modelbackend.utils import read_any, merge_findings
@@ -11,7 +11,35 @@ from pathlib import Path
 from .piiscannerform import Ui_Form
 from .piiscannersettings import SettingsPanel
 from .piiscannerwarning import PopUpForWarning
-from ctypes import *
+from ctypes import wintypes, byref
+import ctypes
+import subprocess
+
+
+# Define Constants
+SEE_MASK_NOCLOSEPROCESS = 0x00000040
+INFINITE = 0xFFFFFFFF
+
+# Define the Structure for ShellExecuteEx
+class SHELLEXECUTEINFOW(ctypes.Structure):
+    _fields_ = [
+        ("cbSize", wintypes.DWORD),
+        ("fMask", wintypes.ULONG),
+        ("hwnd", wintypes.HWND),
+        ("lpVerb", wintypes.LPCWSTR),
+        ("lpFile", wintypes.LPCWSTR),
+        ("lpParameters", wintypes.LPCWSTR),
+        ("lpDirectory", wintypes.LPCWSTR),
+        ("nShow", ctypes.c_int),
+        ("hInstApp", wintypes.HINSTANCE),
+        ("lpIDList", wintypes.LPVOID),
+        ("lpClass", wintypes.LPCWSTR),
+        ("hkeyClass", wintypes.HKEY),
+        ("dwHotKey", wintypes.DWORD),
+        ("hMonitor", wintypes.HANDLE),
+        ("hProcess", wintypes.HANDLE),
+    ]
+
 
 
 class MainWindow(QMainWindow, Ui_Form):
@@ -33,7 +61,6 @@ class MainWindow(QMainWindow, Ui_Form):
         self.FileBrowseButton.clicked.connect(self.open_file_browser)
 
         self.DirectoriesBrowseButton.clicked.connect(self.open_directory_browser)
-
 
         self.ScanFilesButton.clicked.connect(lambda: self.switch_to_file_panel(2))
 
@@ -70,27 +97,62 @@ class MainWindow(QMainWindow, Ui_Form):
                 os.makedirs(self.settingsPanel.loggingLocation)
 
         if platform.system() == "Windows":
+            
+            os.chdir("C:\\Program Files\\pii-scanner\\app\\piiscanner\\pyqt\\resources")
+
+            window_icon = QIcon()
+            
+            window_icon.addFile("icon.png")
+
+            self.setWindowIcon(window_icon)
 
             self.settingsPanel.outputLocation = "C:\\Program Files\\pii-scanner\\findings\\"
             self.settingsPanel.loggingLocation = "C:\\Program Files\\pii-scanner\\logs\\"
 
             self.is_admin()                
+            command = f'/c icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T'
             if self.is_admin() == 1:
+
+                result = subprocess.run(command, shell=True, check=True, 
+                                capture_output=True, text=True)
 
                 if Path(self.settingsPanel.outputLocation).is_dir() == False:
                     os.makedirs(self.settingsPanel.outputLocation)
                 if Path(self.settingsPanel.loggingLocation).is_dir() == False:
                     os.makedirs(self.settingsPanel.loggingLocation)
+
             else:
                 if Path(self.settingsPanel.outputLocation).is_dir() == False or Path(self.settingsPanel.loggingLocation).is_dir() == False:
 
-                    ShellExecuteWin = WinDLL("Shell32").ShellExecuteW
 
-                    ShellExecuteWin(None, "runas", sys.executable, " ".join(sys.argv[1:]), None, 0)
+                    sei = SHELLEXECUTEINFOW()
+                    sei.cbSize = ctypes.sizeof(sei)
+                    sei.fMask = SEE_MASK_NOCLOSEPROCESS # This is key to getting the process handle
+                    sei.lpVerb = "runas"                # Admin elevation
+                    sei.lpFile = "cmd.exe"
+                    sei.lpParameters = command
+                    sei.nShow = 1                       # SW_SHOWNORMAL
 
-                    os.makedirs(self.settingsPanel.outputLocation)
 
-                    os.makedirs(self.settingsPanel.loggingLocation)
+                    if ctypes.windll.shell32.ShellExecuteExW(byref(sei)):
+
+                        ctypes.windll.kernel32.WaitForSingleObject(sei.hProcess, INFINITE)
+                    
+                        exit_code = wintypes.DWORD()
+                        ctypes.windll.kernel32.GetExitCodeProcess(sei.hProcess, byref(exit_code))
+                        
+                        print(f"Command finished with exit code: {exit_code.value}")
+                        
+                        ctypes.windll.kernel32.CloseHandle(sei.hProcess)
+
+                        if exit_code.value == 0:
+                            os.makedirs(self.settingsPanel.outputLocation)
+
+                            os.makedirs(self.settingsPanel.loggingLocation)
+
+                    else:
+                        print("Failed to launch process.")
+
                     
 
     def is_admin(self):
@@ -238,12 +300,13 @@ class MainWindow(QMainWindow, Ui_Form):
                 self.ProgressBar.setValue(75)
 
                 if merged:
+                    ## TODO: Reorder structure. 
                     record = {
                         "ts": time.time(),
                         "files": [pathlib.Path(p).name for p in paths],
                         "findings": merged,
                     }
-                    #TODO: the file name sould also be based on if it is either a directory or a file.
+                    #TODO: the file name should also be based on if it is either a directory or a file.
                     self.outputDir = self.settingsPanel.outputLocation + os.path.sep + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl" 
                     with open(self.outputDir, "w") as file:
                         file.write(json.dumps(record))
