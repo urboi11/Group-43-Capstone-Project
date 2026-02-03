@@ -110,10 +110,8 @@ class MainWindow(QMainWindow, Ui_Form):
             self.settingsPanel.loggingLocation = "C:\\Program Files\\pii-scanner\\logs\\"
 
             self.is_admin()                
+            command = f'/c icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T'
             if self.is_admin() == 1:
-
-
-                command = f'icacls "C:\\Program Files\\pii-scanner" /grant "Everyone":(OI)(CI)F /T'
 
                 result = subprocess.run(command, shell=True, check=True, 
                                 capture_output=True, text=True)
@@ -124,7 +122,6 @@ class MainWindow(QMainWindow, Ui_Form):
                     os.makedirs(self.settingsPanel.loggingLocation)
 
             else:
-                #TODO: Does it add the Everyone role to the pii-scanner folder?
                 if Path(self.settingsPanel.outputLocation).is_dir() == False or Path(self.settingsPanel.loggingLocation).is_dir() == False:
 
 
@@ -133,7 +130,7 @@ class MainWindow(QMainWindow, Ui_Form):
                     sei.fMask = SEE_MASK_NOCLOSEPROCESS # This is key to getting the process handle
                     sei.lpVerb = "runas"                # Admin elevation
                     sei.lpFile = "cmd.exe"
-                    sei.lpParameters = f'/c icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T'
+                    sei.lpParameters = command
                     sei.nShow = 1                       # SW_SHOWNORMAL
 
 
