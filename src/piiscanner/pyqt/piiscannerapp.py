@@ -300,7 +300,15 @@ class MainWindow(QMainWindow, Ui_Form):
                 self.ProgressBar.setValue(75)
 
                 if merged:
-                    ## TODO: Reorder structure. 
+                    iteratedlist = [pathlib.Path(p).name for p in paths]
+                    for files in iteratedlist:
+                        for i in range (len(merged)):
+                            # print(merged[i]["file"])
+                            if files == merged[i]["file"]:
+                                merged[i]["ts"] = time.time()
+
+    
+                    ## TODO: Keep for presentation of data? 
                     record = {
                         "ts": time.time(),
                         "files": [pathlib.Path(p).name for p in paths],
@@ -309,8 +317,9 @@ class MainWindow(QMainWindow, Ui_Form):
                     #TODO: the file name should also be based on if it is either a directory or a file.
                     self.outputDir = self.settingsPanel.outputLocation + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl" 
                     with open(self.outputDir, "w") as file:
-                        file.write(json.dumps(record))
-                        file.write("\r\n")
+                        for i in range(len(merged)):
+                            file.write(json.dumps(merged[i]))
+                            file.write("\r\n")
                         self.FileResults.setText(json.dumps(record, indent=2))
                         file.close()
                         self.ProgressBar.setValue(100)
