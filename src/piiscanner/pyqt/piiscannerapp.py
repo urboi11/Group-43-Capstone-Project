@@ -311,7 +311,16 @@ class MainWindow(QMainWindow, Ui_Form):
                     with open(self.outputDir, "w") as file:
                         file.write(json.dumps(record))
                         file.write("\r\n")
-                        self.FileResults.setText(json.dumps(record, indent=2))
+                        #parsing JSON for display
+                        results = []
+                        currentFile = None
+                        for f in record.get("findings",[]):
+                            if f['file'] != currentFile:
+                                currentFile = f['file']
+                                results.append("")
+                                results.append(f"====={f['file']}=====")
+                            results.append(f"  Type: {f['label']} | Start: {f['start']} | End: {f['end']}")
+                        self.FileResults.setText("\n".join(results))
                         file.close()
                         self.ProgressBar.setValue(100)
                         self.stackedWidget.setCurrentIndex(4)          
