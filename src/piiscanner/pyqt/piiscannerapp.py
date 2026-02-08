@@ -14,6 +14,8 @@ from .piiscannerwarning import PopUpForWarning
 from ctypes import wintypes, byref
 import ctypes
 import subprocess
+from collections import defaultdict
+
 
 
 # Define Constants
@@ -315,11 +317,20 @@ class MainWindow(QMainWindow, Ui_Form):
                         results = []
                         currentFile = None
                         for f in record.get("findings",[]):
-                            if f['file'] != currentFile:
-                                currentFile = f['file']
-                                results.append("")
-                                results.append(f"====={f['file']}=====")
-                            results.append(f"  Type: {f['label']} | Start: {f['start']} | End: {f['end']}")
+                                if f['file'] != currentFile:
+                                    currentFile = f['file']
+                                    
+                                    # Count label types for this file
+                                    label_counts = defaultdict(int)
+                                    for finding in record.get("findings", []):
+                                        if finding['file'] == currentFile:
+                                            label_counts[finding['label']] += 1
+                                    
+                                    # Display file header and counts
+                                    results.append("")
+                                    results.append(f"====={currentFile}=====")
+                                    for label, count in sorted(label_counts.items()):
+                                        results.append(f"  {label}: {count}")
                         self.FileResults.setText("\n".join(results))
                         file.close()
                         self.ProgressBar.setValue(100)
