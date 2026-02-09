@@ -86,8 +86,8 @@ class MainWindow(QMainWindow, Ui_Form):
         if platform.system() == "Darwin":
             resourceFolder = "/Applications/pii-scanner.app/Contents/Resources"
             
-            self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output"
-            self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging"
+            self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output/"
+            self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging/"
             
             if Path(self.settingsPanel.outputLocation).is_dir() == False or Path(self.settingsPanel.loggingLocation).is_dir() == False:
 
@@ -229,9 +229,9 @@ class MainWindow(QMainWindow, Ui_Form):
     def scan(self):
         try:
             if platform.system() == "Darwin":
-                if self.settingsPanel.outputLocation != "/Applications/pii-scanner.app/Contents/Resources/Output":
+                if self.settingsPanel.outputLocation != "/Applications/pii-scanner.app/Contents/Resources/Output/":
                     self.settingsPanel.outputLocation = self.settingsPanel.outputLineEdit.text()
-                if self.settingsPanel.loggingLocation != "/Applications/pii-scanner.app/Contents/Resources/Logging":
+                if self.settingsPanel.loggingLocation != "/Applications/pii-scanner.app/Contents/Resources/Logging/":
                     self.settingsPanel.loggingLocation = self.settingsPanel.loggingLineEdit.text()
                     
             
@@ -303,7 +303,6 @@ class MainWindow(QMainWindow, Ui_Form):
                     iteratedlist = [pathlib.Path(p).name for p in paths]
                     for files in iteratedlist:
                         for i in range (len(merged)):
-                            # print(merged[i]["file"])
                             if files == merged[i]["file"]:
                                 merged[i]["ts"] = time.time()
 
