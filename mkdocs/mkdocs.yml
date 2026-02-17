@@ -1,5 +1,4 @@
 site_name: PIIE
-site_favicon: pictures/PIIEFAVICON.png
 theme:
   name: material
   palette:
