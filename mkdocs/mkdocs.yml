@@ -1,9 +1,5 @@
 site_name: PIIE
-theme:
-  name: material
-  palette:
-    primary: deep orange
-    scheme: slate
+site_favicon: pictures/PIIEFAVICON.png
 nav:
   - Home: index.md
   - About: about.md
