@@ -2,7 +2,7 @@
 
 Welcome to Group 43's capstone project. In collaboration with the team members Andrew Grosko, Caleb Muck, Jason Welsh, and Nick Bernloehr, we have created an application that is able to scan and detect single files and files in directories with PII. Please see instructions for below on getting started with the project, either for regular deployment of the application on your desktop, or via development if you would like to play around with the code.
 
-### Setup(Executable) - Windows Only!
+### Setup(Executable)
 --------
 1. Within main screen you are at now, locate the **Releases** screen, and then download the latest release with the exe located inside. 
 

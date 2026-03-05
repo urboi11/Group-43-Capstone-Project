@@ -88,8 +88,8 @@ class MainWindow(QMainWindow, Ui_Form):
         if platform.system() == "Darwin":
             resourceFolder = "/Applications/pii-scanner.app/Contents/Resources"
             
-            self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output"
-            self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging"
+            self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output/"
+            self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging/"
             
             if Path(self.settingsPanel.outputLocation).is_dir() == False or Path(self.settingsPanel.loggingLocation).is_dir() == False:
 
@@ -231,9 +231,9 @@ class MainWindow(QMainWindow, Ui_Form):
     def scan(self):
         try:
             if platform.system() == "Darwin":
-                if self.settingsPanel.outputLocation != "/Applications/pii-scanner.app/Contents/Resources/Output":
+                if self.settingsPanel.outputLocation != "/Applications/pii-scanner.app/Contents/Resources/Output/":
                     self.settingsPanel.outputLocation = self.settingsPanel.outputLineEdit.text()
-                if self.settingsPanel.loggingLocation != "/Applications/pii-scanner.app/Contents/Resources/Logging":
+                if self.settingsPanel.loggingLocation != "/Applications/pii-scanner.app/Contents/Resources/Logging/":
                     self.settingsPanel.loggingLocation = self.settingsPanel.loggingLineEdit.text()
                     
             
@@ -302,14 +302,21 @@ class MainWindow(QMainWindow, Ui_Form):
                 self.ProgressBar.setValue(75)
 
                 if merged:
-                    ## TODO: Reorder structure. 
+                    iteratedlist = [pathlib.Path(p).name for p in paths]
+                    for files in iteratedlist:
+                        for i in range (len(merged)):
+                            if files == merged[i]["file"]:
+                                merged[i]["ts"] = time.time()
+
+    
+                    ## TODO: Keep for presentation of data? 
                     record = {
                         "ts": time.time(),
                         "files": [pathlib.Path(p).name for p in paths],
                         "findings": merged,
                     }
                     #TODO: the file name should also be based on if it is either a directory or a file.
-                    self.outputDir = self.settingsPanel.outputLocation + os.path.sep + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl" 
+                    self.outputDir = self.settingsPanel.outputLocation + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl" 
                     with open(self.outputDir, "w") as file:
                         file.write(json.dumps(record))
                         file.write("\r\n")
@@ -332,6 +339,10 @@ class MainWindow(QMainWindow, Ui_Form):
                                     for label, count in sorted(label_counts.items()):
                                         results.append(f"  {label}: {count}")
                         self.FileResults.setText("\n".join(results))
+                        for i in range(len(merged)):
+                            file.write(json.dumps(merged[i]))
+                            file.write("\r\n")
+                        self.FileResults.setText(json.dumps(record, indent=2))
                         file.close()
                         self.ProgressBar.setValue(100)
                         self.stackedWidget.setCurrentIndex(4)          

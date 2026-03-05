@@ -1,19 +1,4 @@
 # Welcome to PIIE
 
-For full documentation visit (http://127.0.0.1:8000/about/) [mkdocs.org](https://www.mkdocs.org).
-
-
-## Commands
-
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
-
-## Project layout
-
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        about.md  # Other markdown pages, images and other files.
-        PIIE.md
+* For a first time guide, visit the [About](http://127.0.0.1:8000/about/) section
+* Click [here](http://127.0.0.1:8000/Documentation/) for documentation regarding PIIE's results screen and settings

@@ -1,5 +1,7 @@
 site_name: PIIE
+site_favicon: pictures/PIIEFAVICON.png
 nav:
   - Home: index.md
   - About: about.md
   - PIIE: PIIE.md
+  - Documentation: Documentation.md

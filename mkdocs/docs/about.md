@@ -3,4 +3,19 @@
 # Instructions to get started
 * To get started with PIIE, please visit [here](http://127.0.0.1:8000/PIIE/ "Title")  and Open the Github
 * Download the MSI, then run. *Maybe Remove (Please be aware microsoft doesn't recognise us and that the computer will warn you about downloading this application before allowing it. The install is safe, however it is not professionally bugtested) Maybe Remove*
-* Open PIIE, then click the 
+* When done loading, you will see the options scan for file or scan from directory
+![HomePage](pictures/HomePage.png)
+## Scan from File
+*Scan from file should be selected when you want PIIE to scan a single file from a folder*
+
+1. Click on the scan from file option
+2. Click browse to search for the file in file explorer or type in the file path of the file you want checked
+![Browse](pictures/Browseorpath.png)
+3. Click Scan Now
+4. WIP Results screen, for more details, click [here](http://127.0.0.1:8000/Settings/ "Title") for documentation regarding it
+
+## Scan From Directory
+*Scan from directory should only be selected when an entire folder is the target. Please be aware that this can scan your entire C drive, and will probably crash if allowed to do so. Exercise caution when utilizing this feature*
+
+1. Click on the Scan From Directory option 
+2. WIP
