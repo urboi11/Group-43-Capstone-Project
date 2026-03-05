@@ -5,5 +5,3 @@ nav:
   - About: about.md
   - PIIE: PIIE.md
   - Documentation: Documentation.md
-extra_css: 
-  - Stylesheets/color.css
