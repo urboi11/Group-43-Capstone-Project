@@ -14,6 +14,7 @@ from .piiscannerwarning import PopUpForWarning
 from ctypes import wintypes, byref
 import ctypes
 import subprocess
+from collections import defaultdict
 
 
 # Define Constants
@@ -314,12 +315,30 @@ class MainWindow(QMainWindow, Ui_Form):
                         "findings": merged,
                     }
                     #TODO: the file name should also be based on if it is either a directory or a file.
-                    self.outputDir = self.settingsPanel.outputLocation + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl" 
+                    self.outputDir = self.settingsPanel.outputLocation + os.path.sep + (pathlib.Path(p)).name + "-" + str(dt.datetime.now().strftime('%y-%m-%d-Time-%H-%M-%S')) + ".jsonl" 
                     with open(self.outputDir, "w") as file:
                         for i in range(len(merged)):
                             file.write(json.dumps(merged[i]))
                             file.write("\r\n")
-                        self.FileResults.setText(json.dumps(record, indent=2))
+                        #parsing JSON for display
+                        results = []
+                        currentFile = None
+                        for f in record.get("findings",[]):
+                                if f['file'] != currentFile:
+                                    currentFile = f['file']
+                                    
+                                    # Count label types for this file
+                                    label_counts = defaultdict(int)
+                                    for finding in record.get("findings", []):
+                                        if finding['file'] == currentFile:
+                                            label_counts[finding['label']] += 1
+                                    
+                                    # Display file header and counts
+                                    results.append("")
+                                    results.append(f"====={currentFile}=====")
+                                    for label, count in sorted(label_counts.items()):
+                                        results.append(f"  {label}: {count}")
+                        self.FileResults.setText("\n".join(results))
                         file.close()
                         self.ProgressBar.setValue(100)
                         self.stackedWidget.setCurrentIndex(4)          
