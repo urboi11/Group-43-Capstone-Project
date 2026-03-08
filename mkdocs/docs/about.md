@@ -1,8 +1,8 @@
 # About PIIE
 >PIIE is a personally identifiable information (PII) detection tool that combines machine learning with a graphical interface. A fine-tuned named entity recognition (NER) model built with Hugging Face Transformers and spaCy identifies sensitive data such as names, addresses, and phone numbers across text, Word, and PDF files. The Python-based backend manages file scanning and JSON logging, while a PyQt interface enables user interaction. Packaged as a standalone Windows executable using BeeWare Briefcase and deployed through GitHub, the tool was tested for accuracy, reliability, and ease of use, providing an efficient local solution for data privacy management with the ability to scale into enterprise environments through centralized log forwarding. 
 # Instructions to get started
-* To get started with PIIE, please visit [here](http://127.0.0.1:8000/PIIE/ "Title")  and Open the Github
-* Download the MSI, then run. *Maybe Remove (Please be aware microsoft doesn't recognise us and that the computer will warn you about downloading this application before allowing it. The install is safe, however it is not professionally bugtested) Maybe Remove*
+* To get started with PIIE, please visit [here](http://127.0.0.1:8000/PIIE/ "Title")  and click our Icon to download the software
+* Download the MSI, then run.(Please be aware microsoft doesn't recognise us and that the computer will warn you about downloading this application before allowing it. The install is safe, however it is not professionally bugtested)
 * When done loading, you will see the options scan for file or scan from directory
 ![HomePage](pictures/HomePage.png)
 ## Scan from File
@@ -17,5 +17,10 @@
 ## Scan From Directory
 *Scan from directory should only be selected when an entire folder is the target. Please be aware that this can scan your entire C drive, and will probably crash if allowed to do so. Exercise caution when utilizing this feature*
 
-1. Click on the Scan From Directory option 
-2. WIP
+1. Click on the Scan In Directory option 
+2. Click Browse and navigate to the folder you want
+![BrowseDir](pictures/Directory.png)
+3. Click Scan now once confirmed
+4. Once done, there will be a results screen that will display any PII found there
+
+*Please see [Documentation](http://127.0.0.1:8000/Documentation/) for more information on the results screen
