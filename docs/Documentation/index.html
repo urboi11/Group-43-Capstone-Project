@@ -87,6 +87,11 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            
+            <li class="nav-item" data-bs-level="2"><a href="#results-screen" class="nav-link">Results Screen</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
         </ul>
     </div>
 </div></div>
@@ -96,9 +101,22 @@
 <ul>
 <li>Thresholds- These affect the threshold of confidence for the AI. It is essentially a confidence score. Setting the SSN to .8 for example would ask the program to filter the document for SSN's if the confidence score given by the ai is above 80%.</li>
 <li>Output Location- This is where your output will be stored. Hit browse to go to the file location with browse you can set any folder as the output folder</li>
-<li>Logging Location-This is where logs saved in a txt format for ease of use.</li>
-<li>Batch size: Batch size controls how many token sequences (or chunks) the model processes at once during inference or training, affecting speed and memory usage.</li>
-<li>Merge gap: Merge gap defines the maximum number of characters allowed between adjacent detected fragments for them to be combined into a single merged PII span.</li>
+<li>Logging Location- This is where logs saved in a txt format for ease of use.</li>
+<li>Batch size- Batch size controls how many token sequences (or chunks) the model processes at once during inference or training, affecting speed and memory usage.</li>
+<li>Merge Gap- Merge gap defines the maximum number of characters allowed between adjacent detected fragments for them to be combined into a single merged PII span.</li>
+</ul>
+<h2 id="results-screen">Results Screen</h2>
+<p><img alt="Results" src="../pictures/Results.png" /></p>
+<ul>
+<li>Files- Shows files scanned</li>
+<li>Findings-<ol>
+<li>Start/End- What character number the PII was found at</li>
+<li>Label-  What kind of PII was found</li>
+<li>Score- Ranged 0-1 decimal percentage, with 1 being the most confident and 0 having no confidence. You shouldn't have anything 0 unless it is set in the Settings before scanning</li>
+<li>File- What file the PII was found in </li>
+<li>TS- Timestamp <em>wip</em></li>
+</ol>
+</li>
 </ul></div>
             </div>
         </div>
