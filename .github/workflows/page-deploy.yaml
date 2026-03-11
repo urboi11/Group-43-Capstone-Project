@@ -2,7 +2,7 @@ name: page-deploy
 on:
   push:
     branches:
-      - master
+      - mkdocs_nick
 permissions:
   contents: write
 jobs:
@@ -25,4 +25,5 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install mkdocs-material 
+      - run: ls -la
       - run: mkdocs gh-deploy --force
