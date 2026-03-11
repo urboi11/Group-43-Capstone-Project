@@ -1,7 +1,14 @@
 site_name: PIIE
-site_favicon: pictures/PIIEFAVICON.png
+theme:
+  name: material
+  palette:
+    scheme: slate
+    primary: deep orange
+  favicon: img/favicon.png
+  logo: img/favicon.png
 nav:
   - Home: index.md
   - About: about.md
-  - PIIE: PIIE.md
-  - Documentation: Documentation.md
+  - Download: download.md
+  - Documentation: documentation.md
+
