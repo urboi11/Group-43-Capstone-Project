@@ -1,4 +1,5 @@
 site_name: PIIE
+docs_dir: ./docs
 theme:
   name: material
   palette:
