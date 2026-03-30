@@ -38,5 +38,7 @@ briefcase dev -r
 ```
 5. The following command above will update the dependencies and then start the project in development mode, which will show the application if no errors have occurred. 
 
+
+# Demonstration Video
 [![Group 43 IT Expo Presentation](https://img.youtube.com/vi/Mf06m566Qh0/0.jpg)](https://www.youtube.com/watch?v=Mf06m566Qh0)
 
