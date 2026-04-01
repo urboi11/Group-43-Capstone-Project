@@ -77,7 +77,9 @@ class MainWindow(QMainWindow, Ui_Form):
 
         self.ResultsMainMenuButton.clicked.connect(self.switch_to_main_menu_panel)
         
-        self.FindingsFolderButton.clicked.connect(lambda: os.open(self.outputDir, os.O_RDWR))
+        # self.FindingsFolderButton.clicked.connect(lambda: os.open(self.outputDir, os.O_RDWR))
+
+        self.FindingsFolderButton.clicked.connect(self.open_explorer)
 
         self.FileSettingsMenu.clicked.connect(self.open_settings)
 
@@ -204,7 +206,14 @@ class MainWindow(QMainWindow, Ui_Form):
             self.settingsPanel.show()
 
         
-    
+    def open_explorer(self):
+        dir_name = os.path.dirname(self.outputDir)
+
+        if platform.system() == "Darwin":  
+            subprocess.run(["/usr/bin/open", dir_name])
+        if platform.system() == "Windows":
+            subprocess.run(["explorer", dir_name])
+            
     def open_file_browser(self):
         fileName = QFileDialog.getOpenFileName(self, "Find Files..", os.getcwd(), "Text Files (*.txt);;Word Files (*.docx);;PDF Files(*.pdf)")
         self.FileLineEdit.setText(fileName[0])
