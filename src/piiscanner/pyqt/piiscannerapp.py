@@ -76,8 +76,6 @@ class MainWindow(QMainWindow, Ui_Form):
         self.DirectoryScanNowButton.clicked.connect(self.scan)
 
         self.ResultsMainMenuButton.clicked.connect(self.switch_to_main_menu_panel)
-        
-        # self.FindingsFolderButton.clicked.connect(lambda: os.open(self.outputDir, os.O_RDWR))
 
         self.FindingsFolderButton.clicked.connect(self.open_explorer)
 
