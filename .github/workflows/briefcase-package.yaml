@@ -41,7 +41,7 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-            name: pii-scanner.msi
+            name: PIIE.msi
             path: .\dist\PIIE-1.0.msi
 
     build-macos:
@@ -85,7 +85,7 @@ jobs:
           if: success()
           uses: actions/upload-artifact@v4
           with:
-            name: pii-scanner.pkg
+            name: PIIE.pkg
             path: ./dist/PIIE-1.0.pkg
 
 
@@ -101,13 +101,13 @@ jobs:
           uses: actions/download-artifact@v5
           with:
             name: | 
-              pii-scanner.msi
+              PIIE.msi
 
         - name: Download MacOS Artifacts
           uses: actions/download-artifact@v5
           with:
             name: | 
-              pii-scanner.pkg
+              PIIE.pkg
 
         - name: Release
           uses: softprops/action-gh-release@v2
@@ -115,6 +115,6 @@ jobs:
             name: PIIE-Scanner-${{ steps.date.outputs.date }}
             tag_name: ${{github.ref_name}}
             files: |
-              pii-scanner-1.0.msi
-              pii-scanner-1.0.pkg
+              PIIE-1.0.msi
+              PIIE-1.0.pkg
             token: ${{ secrets.CAPSTONETOKEN }}
