@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
             name: pii-scanner.msi
-            path: .\dist\pii-scanner-1.0.msi
+            path: .\dist\PIIE-1.0.msi
 
     build-macos:
       runs-on: self-hosted
@@ -86,7 +86,7 @@ jobs:
           uses: actions/upload-artifact@v4
           with:
             name: pii-scanner.pkg
-            path: ./dist/pii-scanner-1.0.pkg
+            path: ./dist/PIIE-1.0.pkg
 
 
     create_release:
