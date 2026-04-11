@@ -1,5 +1,6 @@
 name: BriefCase Package Deployment
 on:
+    workflow_dispatch:
     push:
         branches:
             - master
