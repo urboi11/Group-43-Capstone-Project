@@ -1,15 +1,15 @@
 # This project was generated with 0.3.25 using template: https://github.com/beeware/briefcase-template @ v0.3.25
 [tool.briefcase]
-project_name = "pii-scanner"
-bundle = "com.pii-scanner"
+project_name = "PIIE"
+bundle = "com.piie"
 version = "1.0"
 url = "https://piiescanner.com"
 license.file = "LICENSE"
-author = "pii-scanner"
+author = "Group 43 Capstone Team"
 author_email = ""
 
 [tool.briefcase.app.piiscanner]
-formal_name = "pii-scanner"
+formal_name = "PIIE"
 description = "Group 43 Senior Capstone Project"
 long_description = """More details about the app should go here.
 """
