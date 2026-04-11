@@ -4,9 +4,9 @@ Welcome to Group 43's capstone project. In collaboration with the team members A
 
 ### Setup(Executable)
 --------
-1. Within main screen you are at now, locate the **Releases** screen, and then download the latest release with the exe located inside. 
+1. Within main screen you are at now, locate the **Releases** screen, and then download the latest release depending on the platform you are using. 
 
-2. Once you are done, click on the exe to install on your Windows Based computer, and then enjoy!
+2. Once you are done, click on the exectuable to install on your Windows or Mac Based computer, and then enjoy!
 
 
 
