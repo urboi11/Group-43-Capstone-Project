@@ -85,10 +85,10 @@ class MainWindow(QMainWindow, Ui_Form):
         
         
         if platform.system() == "Darwin":
-            resourceFolder = "/Applications/pii-scanner.app/Contents/Resources"
+            resourceFolder = "/Applications/PIIE.app/Contents/Resources"
             
-            self.settingsPanel.outputLocation = "/Applications/pii-scanner.app/Contents/Resources/Output"
-            self.settingsPanel.loggingLocation = "/Applications/pii-scanner.app/Contents/Resources/Logging"
+            self.settingsPanel.outputLocation = "/Applications/PIIE.app/Contents/Resources/Output"
+            self.settingsPanel.loggingLocation = "/Applications/PIIE.app/Contents/Resources/Logging"
             
             if Path(self.settingsPanel.outputLocation).is_dir() == False or Path(self.settingsPanel.loggingLocation).is_dir() == False:
 
@@ -99,7 +99,7 @@ class MainWindow(QMainWindow, Ui_Form):
 
         if platform.system() == "Windows":
             
-            os.chdir("C:\\Program Files\\pii-scanner\\app\\piiscanner\\pyqt\\resources")
+            os.chdir("C:\\Program Files\\PIIE\\app\\piiscanner\\pyqt\\resources")
 
             window_icon = QIcon()
             
@@ -107,11 +107,11 @@ class MainWindow(QMainWindow, Ui_Form):
 
             self.setWindowIcon(window_icon)
 
-            self.settingsPanel.outputLocation = "C:\\Program Files\\pii-scanner\\findings\\"
-            self.settingsPanel.loggingLocation = "C:\\Program Files\\pii-scanner\\logs\\"
+            self.settingsPanel.outputLocation = "C:\\Program Files\\PIIE\\findings\\"
+            self.settingsPanel.loggingLocation = "C:\\Program Files\\PIIE\\logs\\"
 
             self.is_admin()                
-            command = f'/c icacls "C:\\Program Files\\pii-scanner" /grant:r "Users":(OI)(CI)M /T'
+            command = f'/c icacls "C:\\Program Files\\PIIE" /grant:r "Users":(OI)(CI)M /T'
             if self.is_admin() == 1:
 
                 result = subprocess.run(command, shell=True, check=True, 
@@ -237,17 +237,17 @@ class MainWindow(QMainWindow, Ui_Form):
     def scan(self):
         try:
             if platform.system() == "Darwin":
-                if self.settingsPanel.outputLocation != "/Applications/pii-scanner.app/Contents/Resources/Output":
+                if self.settingsPanel.outputLocation != "/Applications/PIIE.app/Contents/Resources/Output":
                     self.settingsPanel.outputLocation = self.settingsPanel.outputLineEdit.text()
-                if self.settingsPanel.loggingLocation != "/Applications/pii-scanner.app/Contents/Resources/Logging":
+                if self.settingsPanel.loggingLocation != "/Applications/PIIE.app/Contents/Resources/Logging":
                     self.settingsPanel.loggingLocation = self.settingsPanel.loggingLineEdit.text()
                     
             
             if platform.system() == "Windows":
 
-                if self.settingsPanel.outputLocation != "C:\\Program Files\\pii-scanner\\findings\\":
+                if self.settingsPanel.outputLocation != "C:\\Program Files\\PIIE\\findings\\":
                     self.settingsPanel.outputLocation = self.settingsPanel.outputLineEdit.text()
-                if self.settingsPanel.loggingLocation != "C:\\Program Files\\pii-scanner\\logs\\":
+                if self.settingsPanel.loggingLocation != "C:\\Program Files\\PIIE\\logs\\":
                     self.settingsPanel.loggingLocation = self.settingsPanel.loggingLineEdit.text()
             
             
